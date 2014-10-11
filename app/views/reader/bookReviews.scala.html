@@ -1,0 +1,31 @@
+@(bookReviews: List[views.table.BookReviewTable])
+@import helper._
+@import bootstrap3._
+@readerMain("我的书评") {
+<div class="row">
+    <div class="col-md-8">
+        @if(bookReviews.size() > 0) {
+        @for(bookReview <- bookReviews) {
+        <div class="review-callout">
+            <h4 class="list-group-item-heading">
+            @if(bookReview.star) {
+                <i class="fa fa-heart"></i>
+            } else {
+                <i class="fa fa-heart-o"></i>
+            } <a href="/reader/books/@bookReview.isbn/info">@bookReview.bookname</a>
+            </h4>
+            <p class="list-group-item-text review-text">@bookReview.review</p>
+        </div>
+        }
+        }else{
+        <div class="review-callout">
+            <p class="list-group-item-text review-text">还没有写过书评</p>
+        </div>
+        }
+    </div>
+</div>
+<script>
+$("#navBookReviews").addClass("active");
+$("#navBookReviews").parent().parent().parent().addClass("active").children('ul').collapse('toggle');
+</script>
+}

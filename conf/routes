@@ -1,0 +1,135 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page - we use the @controllers syntax here so that the router knows we are referring to a class. In turn it
+# will call on the GlobalSettings.getController method to resolve the actual controller instance.
+GET     /                              @controllers.ReaderCtrl.redirect
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file                  controllers.Assets.at(path="/public", file)
+# ~~~~~~~~~~~~
+# 管理员端
+# ~~~~~~~~~~~~
+# 登录
+GET     /admin/login                   @controllers.AdminCtrl.loginForm
+POST    /admin/login                   @controllers.AdminCtrl.login
+GET     /admin/logout                  @controllers.AdminCtrl.logout
+# 首页
+GET     /admin/index                   @controllers.AdminCtrl.index
+# 权限管理
+GET     /admin/readerCates             @controllers.ReaderCateCtrl.readerCates
+POST    /admin/readerCates/new         @controllers.ReaderCateCtrl.newReaderCate
+POST    /admin/readerCates/:id/update  @controllers.ReaderCateCtrl.updateReaderCate(id: Long)
+POST    /admin/readerCates/:id/delete  @controllers.ReaderCateCtrl.deleteReaderCate(id: Long)
+# 读者管理
+GET     /admin/readers                 @controllers.ReaderCtrl.allReaders
+GET     /admin/readers/resetpwd        @controllers.ReaderCtrl.resetPasswordForm
+POST    /admin/readers/resetpwd        @controllers.ReaderCtrl.resetPassword
+# 书刊管理
+GET     /admin/books                   @controllers.BookCtrl.aBooks
+GET     /admin/books/:isbn/info        @controllers.BookCtrl.abook(isbn:String)
+# 我要找书: 搜索
+POST    /admin/books/search            @controllers.BookCtrl.aSearch
+# 书刊管理 图书入库
+GET     /admin/books/newBook           @controllers.BookCtrl.bookForm
+POST    /admin/books/newBook           @controllers.BookCtrl.newBook
+POST    /admin/books/updateBook        @controllers.BookCtrl.updateBook
+# 书刊管理 图书购买
+GET     /admin/orders                  @controllers.OrderCtrl.allOrders
+GET     /admin/orders/nobuy/:isbn      @controllers.OrderCtrl.setNoBuy(isbn: String)
+GET     /admin/orders/unbuy/:isbn      @controllers.OrderCtrl.setUnBuy(isbn: String)
+# 借阅管理 借阅记录查询
+GET     /admin/borrows                 @controllers.BorrowCtrl.aBorrows
+GET     /admin/oborrows                @controllers.BorrowCtrl.oBorrows
+POST    /admin/borrows/between         @controllers.BorrowCtrl.aBorrowsBetween
+POST    /admin/oborrows/between        @controllers.BorrowCtrl.oBorrowsBetween
+# 借阅管理 借阅书刊
+GET     /admin/borrows/borrow          @controllers.BorrowCtrl.borrowForm
+# 借阅管理 借书 AJAX
+POST    /borrows/borrowBook            @controllers.BorrowCtrl.borrowBook
+# 借阅管理 还书 AJAX
+POST    /borrows/returnBook            @controllers.BorrowCtrl.returnBook
+# 借阅管理 续借 AJAX
+POST    /borrows/renewBook             @controllers.BorrowCtrl.renewBook
+# 系统设置 元数据设置
+GET    /admin/allMeta                  @controllers.MetaSetCtrl.allMetas
+POST   /admin/libaryMeta/new           @controllers.MetaSetCtrl.newMeta
+POST   /admin/libaryMeta/:id/delete    @controllers.MetaSetCtrl.deleteMeta(id: Long)
+POST   /admin/libaryMeta/:id/update    @controllers.MetaSetCtrl.updateMeta(id: Long)
+GET    /admin/libaryMeta/:name/check   @controllers.MetaSetCtrl.checkMeta(name: String)
+
+# 积分管理
+GET    /admin/pointManager             @controllers.PointCtrl.aPoints
+POST   /admin/newPoint                 @controllers.PointCtrl.newPoint
+POST   /admin/deletePoint/:id          @controllers.PointCtrl.deletePoint(id: Long)
+# 统计报表
+GET    /admin/charts                   @controllers.AdminCtrl.chart
+GET    /admin/topBorrowed/:size        @controllers.BookCtrl.bookTopBorrowed(size: Long)
+GET    /admin/topHearted/:size         @controllers.BookCtrl.bookTopHearted(size: Long)
+GET    /admin/topBorrowReader/:size    @controllers.BorrowCtrl.readerTopBorrowBook(size: Long)
+# 系统设置  管理员设置
+GET    /admin/adminManager             @controllers.AdminCtrl.allAdmins
+# 管理员名称查重 AJAX
+GET    /admin/adminManager/:name/check @controllers.AdminCtrl.checkAdmin(name: String)
+POST   /admin/adminManager/new         @controllers.AdminCtrl.newAdmin
+POST   /admin/adminManager/:id/delete  @controllers.AdminCtrl.deleteAdmin(id: Long)
+POST   /admin/adminManager/:id/update  @controllers.AdminCtrl.updateAdmin(id: Long)
+# 系统设置  消息提示读者
+GET    /admin/information              @controllers.InformationCtrl.allInformations
+POST   /admin/information/new          @controllers.InformationCtrl.newInformation
+POST   /admin/information/:id/delete   @controllers.InformationCtrl.deleteInformation(id: Long)
+GET    /admin/information/:id/show     @controllers.InformationCtrl.aShowInformation(id: Long)
+POST   /admin/information/:id/update   @controllers.InformationCtrl.updateInformation(id: Long)
+# ~~~~~~~~~~~~
+# 读者端
+# ~~~~~~~~~~~~
+# 登录
+GET     /reader/login                  @controllers.ReaderCtrl.loginForm
+POST    /reader/login                  @controllers.ReaderCtrl.login
+GET     /reader/logout                 @controllers.ReaderCtrl.logout
+# 首页
+GET     /reader/index                  @controllers.ReaderCtrl.index
+GET     /reader/information/:id        @controllers.InformationCtrl.rShowInformation(id: Long)
+# 我的借阅: 在读(当前借阅) 包括续借
+GET     /reader/borrows                @controllers.BorrowCtrl.rBorrows
+# 我的借阅: 写书评
+GET     /reader/bookReview/:isbn/get   @controllers.BookReviewCtrl.readerBookReview(isbn:String)
+POST    /reader/bookReview/save        @controllers.BookReviewCtrl.saveBookReview
+POST    /reader/bookReview/:isbn/heart @controllers.BookReviewCtrl.setBookHeart(isbn: String)
+# 我的借阅: 读过(历史借阅)
+GET     /reader/borrows/history        @controllers.BorrowCtrl.rBorrowsHistory
+POST    /reader/borrows/between        @controllers.BorrowCtrl.rBorrowsBetween
+# 我要找书: 查看所有书刊
+GET     /reader/books                  @controllers.BookCtrl.rBooks
+# 查看特定书刊信息
+GET     /reader/books/:isbn/info       @controllers.BookCtrl.rbook(isbn: String)
+# 我要找书: 搜索
+POST    /reader/books/search           @controllers.BookCtrl.rSearch
+# 我要买书: 想读 —— 填写购书单
+GET     /reader/orders/newOrder        @controllers.OrderCtrl.orderForm
+POST    /reader/orders/newOrder        @controllers.OrderCtrl.newOrder
+# 我要买书: 想读 —— 我的购书单
+GET     /reader/orders                 @controllers.OrderCtrl.readerOrders
+POST    /reader/orders                 @controllers.OrderCtrl.deleteOrder(id: Long)
+# 个人中心 读者资料
+GET     /reader/info                   @controllers.ReaderCtrl.info
+# 个人中心 修改密码
+GET     /reader/changePwd              @controllers.ReaderCtrl.changePwdForm
+POST    /reader/changePwd              @controllers.ReaderCtrl.changePwd
+# 个人中心 我的积分
+GET     /reader/points                 @controllers.PointCtrl.rPoints
+# 个人中心 我的书评
+GET     /reader/bookReviews            @controllers.BookReviewCtrl.readerBookReviews
+# ~~~~~~~~~~~~
+# 通用
+# ~~~~~~~~~~~~
+# AJAX
+GET     /ISBNService/:isbn             @controllers.BookCtrl.isbnService(isbn: String)
+GET     /counterpartInfo/:code         @controllers.BorrowCtrl.counterpart(code: String)
+# 根据isbn获取书刊是否已存在
+GET     /isBookExist/:isbn             @controllers.BookCtrl.isBookExist(isbn: String)
+# 根据isbn获取复本
+GET     /bookCounterparts/:isbn        @controllers.BookCtrl.currrentCounterpart(isbn: String)
+GET     /readerBorrows/:code/current   @controllers.BorrowCtrl.readerBorrowsCurrent(code: String)
+# 获取读者信息 AJAX
+GET     /readerInfo/:code              @controllers.ReaderCtrl.reader(code: String)

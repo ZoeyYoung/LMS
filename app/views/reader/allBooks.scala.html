@@ -1,0 +1,459 @@
+@(libraryTypes: List[LibraryType], books: List[views.table.BookTable], keyword: String = "")
+@import bootstrap3._
+@readerMain("馆藏书刊") {
+<div class="row">
+    <div class="col-md-10">
+        <table id="bookTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>书名</th>
+                    <th>点赞数 <i class="fa fa-heart" id="heartBtn"></i></th>
+                    <th>借阅数 </th>
+                    <th>ISBN</th>
+                    <th>馆藏类型</th>
+                    <th>分类号</th>
+                    <th>分类</th>
+                    <th>出版单位</th>
+                    <th>著者</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>书名</th>
+                    <th></th>
+                    <th></th>
+                    <th>ISBN</th>
+                    <th><select id="libraryType" name="libraryType">
+                        <option value="" selected="selected">全部</option>
+                        @for(libraryType <- libraryTypes){
+                            <option value="@libraryType.libraryType">@libraryType.libraryType</option>
+                        }
+                    </select>
+                    </th>
+                    <th></th>
+                    <th>分类</th>
+                    <th>出版单位</th>
+                    <th>著者</th>
+                </tr>
+            </tfoot>
+            <tbody>
+             @for(book <- books){
+              <tr>
+                <td><a href="/reader/books/@book.isbn/info">@book.bookname</a></td>
+                <td>@book.heartedTimes</td>
+                <td>@book.borrowedTimes</td>
+                <td>@book.isbn</td>
+                <td>@book.libraryType</td>
+                <td>@book.categoryCode</td>
+                <td>@book.category</td>
+                <td>@book.publisher</td>
+                <td>@book.author</td>
+              </tr>
+             }
+             </tbody>
+        </table>
+    </div>
+    <!-- Begin ModelTree  -->
+    <div class="col-md-2 modelTree">
+    <nav class="nav">
+        <ul class="metisFolder">
+            <li>
+                <a href="#" title=""><span class="fa fa-folder-o"></span><b>全部</b></a>
+            </li>
+        </ul>
+        <!-- begin A  -->
+        <ul class="metisFolder">
+            <li>
+                <a href="#"><span class="fa fa-folder-o"></span><b> A 马克思主义、列宁主义、毛泽东思想、邓小平理论</b></a>
+                <ul><li><a href="#" title="A0"><span class="fa fa-file"></span> 0 马克思、恩格斯著作</a></li>
+                    <li><a href="#" title="A1"><span class="fa fa-file"></span> 1 列宁著作</a></li>
+                    <li><a href="#" title="A2"><span class="fa fa-file"></span> 2 斯大林著作</a></li>
+                    <li><a href="#" title="A3"><span class="fa fa-file"></span> 3 毛泽东著作</a></li>
+                    <li><a href="#" title="A4"><span class="fa fa-file"></span> 4 马克思、恩格斯、列宁、斯大林、毛泽东著作汇编</a></li>
+                    <li><a href="#" title="A5"><span class="fa fa-file"></span> 5 马克思、恩格斯、列宁、斯大林、毛泽东的生平和传记</a></li>
+                    <li><a href="#" title="A6"><span class="fa fa-file"></span> 6 马克思主义、列宁主义、毛泽东思想的学习和研究</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end A -->
+        <!-- begin B  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> B 哲学</b></a>
+                <ul><li><a href="#" title="B0"><span class="fa fa-file"></span> 0 哲学理论</a></li>
+                    <li><a href="#" title="B1"><span class="fa fa-file"></span> 1 世界哲学</a></li>
+                    <li><a href="#" title="B2"><span class="fa fa-file"></span> 2 中国哲学</a></li>
+                    <li><a href="#" title="B3"><span class="fa fa-file"></span> 3 亚洲哲学</a></li>
+                    <li><a href="#" title="B4"><span class="fa fa-file"></span> 4 非洲哲学</a></li>
+                    <li><a href="#" title="B5"><span class="fa fa-file"></span> 5 欧洲哲学</a></li>
+                    <li><a href="#" title="B6"><span class="fa fa-file"></span> 6 大洋洲哲学</a></li>
+                    <li><a href="#" title="B7"><span class="fa fa-file"></span> 7 美洲哲学</a></li>
+                    <li><a href="#" title="B80"><span class="fa fa-file"></span> 80 思维科学</a></li>
+                    <li><a href="#" title="B81"><span class="fa fa-file"></span> 81 逻辑学（论理学）</a></li>
+                    <li><a href="#" title="B82"><span class="fa fa-file"></span> 82 伦理学（道德哲学）</a></li>
+                    <li><a href="#" title="B83"><span class="fa fa-file"></span> 83 美学</a></li>
+                    <li><a href="#" title="B84"><span class="fa fa-file"></span> 84 心理学</a></li>
+                    <li><a href="#" title="B9"><span class="fa fa-file"></span> 9 宗教</a></li>
+                </ul>
+            </li>
+       </ul>
+       <!-- end B -->
+       <!-- begin C  -->
+       <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> C 社会科学总论</b></a>
+                <ul><li><a href="#" title="C0"><span class="fa fa-file"></span> 0 社会科学理论与方法论</a></li>
+                    <li><a href="#" title="C1"><span class="fa fa-file"></span> 1 社会科学现状、概况</a></li>
+                    <li><a href="#" title="C2"><span class="fa fa-file"></span> 2 社会科学机构、团体、会议</a></li>
+                    <li><a href="#" title="C3"><span class="fa fa-file"></span> 3 社会科学研究方法</a></li>
+                    <li><a href="#" title="C4"><span class="fa fa-file"></span> 4 社会科学教育与普及</a></li>
+                    <li><a href="#" title="C5"><span class="fa fa-file"></span> 5 社会科学丛书、文集、连续性出版物</a></li>
+                    <li><a href="#" title="C6"><span class="fa fa-file"></span> 6 社会科学参考工具书</a></li>
+                    <li><a href="#" title="C7"><span class="fa fa-file"></span> 7 统计学</a></li>
+                    <li><a href="#" title="C81"><span class="fa fa-file"></span> 81 社会学</a></li>
+                    <li><a href="#" title="C82"><span class="fa fa-file"></span> 82 人口学 </a></li>
+                    <li><a href="#" title="C83"><span class="fa fa-file"></span> 83 管理学</a></li>
+                    <li><a href="#" title="C84"><span class="fa fa-file"></span> 84 民族学</a></li>
+                    <li><a href="#" title="C85"><span class="fa fa-file"></span> 85 人才学</a></li>
+                    <li><a href="#" title="C86"><span class="fa fa-file"></span> 86 劳动科学</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end C -->
+        <!-- begin D  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> D 政治、法律</b></a>
+                <ul><li><a href="#" title="D0"><span class="fa fa-file"></span> 0 政治理论</a></li>
+                    <li><a href="#" title="D1"><span class="fa fa-file"></span> 1 国际共产主义运动</a></li>
+                    <li><a href="#" title="D2"><span class="fa fa-file"></span> 2 中国共产党29中国共产主义青年团</a></li>
+                    <li><a href="#" title="D3"><span class="fa fa-file"></span> 3 3/37各国共产党</a></li>
+                    <li><a href="#" title="D4"><span class="fa fa-file"></span> 4 工人、农民、青年、妇女运动与组织</a></li>
+                    <li><a href="#" title="D5"><span class="fa fa-file"></span> 5 世界政治</a></li>
+                    <li><a href="#" title="D6"><span class="fa fa-file"></span> 6 中国政治</a></li>
+                    <li><a href="#" title="D7"><span class="fa fa-file"></span> 7 3/77各国政治</a></li>
+                    <li><a href="#" title="D8"><span class="fa fa-file"></span> 8 外交、国际关系</a></li>
+                    <li><a href="#" title="D9"><span class="fa fa-file"></span> 9 法律</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end D -->
+        <!-- begin E  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> E 军事</b></a>
+                <ul><li><a href="#" title="E0"><span class="fa fa-file"></span> 0 军事理论</a></li>
+                    <li><a href="#" title="E1"><span class="fa fa-file"></span> 1 世界军事</a></li>
+                    <li><a href="#" title="E2"><span class="fa fa-file"></span> 2 中国军事</a></li>
+                    <li><a href="#" title="E3"><span class="fa fa-file"></span> 3 各国军事</a></li>
+                    <li><a href="#" title="E8"><span class="fa fa-file"></span> 8 战略、战役、战术</a></li>
+                    <li><a href="#" title="E9"><span class="fa fa-file"></span> 9 军事技术</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end E -->
+        <!-- begin F  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> F 经济</b></a>
+                <ul><li><a href="#" title="F0"><span class="fa fa-file"></span> 0 政治经济学</a></li>
+                    <li><a href="#" title="F1"><span class="fa fa-file"></span> 1 世界各国经济概况、经济史、经济地理</a></li>
+                    <li><a href="#" title="F2"><span class="fa fa-file"></span> 2 经济计划与管理</a></li>
+                    <li><a href="#" title="F3"><span class="fa fa-file"></span> 3 农业经济</a></li>
+                    <li><a href="#" title="F4"><span class="fa fa-file"></span> 4 工业经济</a></li>
+                    <li><a href="#" title="F49"><span class="fa fa-file"></span> 49 信息产业经济</a></li>
+                    <li><a href="#" title="F5"><span class="fa fa-file"></span> 5 交通运输经济</a></li>
+                    <li><a href="#" title="F59"><span class="fa fa-file"></span> 59 旅游经济</a></li>
+                    <li><a href="#" title="F6"><span class="fa fa-file"></span> 6 邮电经济</a></li>
+                    <li><a href="#" title="F7"><span class="fa fa-file"></span> 7 贸易经济</a></li>
+                    <li><a href="#" title="F8"><span class="fa fa-file"></span> 8 财政、金融</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end F -->
+        <!-- begin G  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> G 文化、科学、教育、体育</b></a>
+                <ul><li><a href="#" title="G0"><span class="fa fa-file"></span> 0 文化理论</a></li>
+                    <li><a href="#" title="G1"><span class="fa fa-file"></span> 1 世界各国文化事业概况</a></li>
+                    <li><a href="#" title="G2"><span class="fa fa-file"></span> 2 信息与知识传播</a></li>
+                    <li><a href="#" title="G3"><span class="fa fa-file"></span> 3 科学、科学研究</a></li>
+                    <li><a href="#" title="G4"><span class="fa fa-file"></span> 4 教育</a></li>
+                    <li><a href="#" title="G8"><span class="fa fa-file"></span> 8 体育</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end G -->
+        <!-- begin H  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> H 语言、文字</b></a>
+                <ul><li><a href="#" title="H0"><span class="fa fa-file"></span> 0 语言学</a></li>
+                    <li><a href="#" title="H1"><span class="fa fa-file"></span> 1 汉语</a></li>
+                    <li><a href="#" title="H2"><span class="fa fa-file"></span> 2 中国少数民族语言</a></li>
+                    <li><a href="#" title="H3"><span class="fa fa-file"></span> 3 常用外国语</a></li>
+                    <li><a href="#" title="H4"><span class="fa fa-file"></span> 4 汉藏语系</a></li>
+                    <li><a href="#" title="H5"><span class="fa fa-file"></span> 5 阿尔泰语系</a></li>
+                    <li><a href="#" title="H6"><span class="fa fa-file"></span> 6 1/67其他小语种</a></li>
+                    <li><a href="#" title="H7"><span class="fa fa-file"></span> 7 印欧语系</a></li>
+                    <li><a href="#" title="H81"><span class="fa fa-file"></span> 81非洲诸语言</a></li>
+                    <li><a href="#" title="H83"><span class="fa fa-file"></span> 83美洲诸语言</a></li>
+                    <li><a href="#" title="H84"><span class="fa fa-file"></span> 84大洋洲诸语言</a></li>
+                    <li><a href="#" title="H9"><span class="fa fa-file"></span> 9 国际辅助语</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end H -->
+        <!-- begin I  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> I 文学</b></a>
+                <ul><li><a href="#" title="I0"><span class="fa fa-file"></span> 0 文学理论</a></li>
+                    <li><a href="#" title="I1"><span class="fa fa-file"></span> 1 世界文学</a></li>
+                    <li><a href="#" title="I2"><span class="fa fa-file"></span> 2 中国文学</a></li>
+                    <li><a href="#" title="I37"><span class="fa fa-file"></span> 37 各国文学</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end I -->
+        <!-- begin J  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> J 艺术</b></a>
+                <ul><li><a href="#" title="J0"><span class="fa fa-file"></span> 0 艺术理论</a></li>
+                    <li><a href="#" title="J1"><span class="fa fa-file"></span> 1 世界各国艺术概况</a></li>
+                    <li><a href="#" title="J2"><span class="fa fa-file"></span> 2 绘画 29 书法、篆刻</a></li>
+                    <li><a href="#" title="J3"><span class="fa fa-file"></span> 3 雕塑</a></li>
+                    <li><a href="#" title="J4"><span class="fa fa-file"></span> 4 摄影艺术</a></li>
+                    <li><a href="#" title="J5"><span class="fa fa-file"></span> 5 工艺美术</a></li>
+                    <li><a href="#" title="J6"><span class="fa fa-file"></span> 6 音乐</a></li>
+                    <li><a href="#" title="J7"><span class="fa fa-file"></span> 7 舞蹈</a></li>
+                    <li><a href="#" title="J8"><span class="fa fa-file"></span> 8 戏剧艺术</a></li>
+                    <li><a href="#" title="J9"><span class="fa fa-file"></span> 9 电影、电视艺术</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end J -->
+        <!-- begin K  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> K 历史、地理</b></a>
+                <ul><li><a href="#" title="K0"><span class="fa fa-file"></span> 0 史学理论</a></li>
+                    <li><a href="#" title="K1"><span class="fa fa-file"></span> 1 世界史</a></li>
+                    <li><a href="#" title="K2"><span class="fa fa-file"></span> 2 中国史</a></li>
+                    <li><a href="#" title="K3"><span class="fa fa-file"></span> 3 亚洲史</a></li>
+                    <li><a href="#" title="K4"><span class="fa fa-file"></span> 4 非洲史</a></li>
+                    <li><a href="#" title="K5"><span class="fa fa-file"></span> 5 欧洲史</a></li>
+                    <li><a href="#" title="K6"><span class="fa fa-file"></span> 6 大洋洲史</a></li>
+                    <li><a href="#" title="K7"><span class="fa fa-file"></span> 7 美洲史</a></li>
+                    <li><a href="#" title="K81"><span class="fa fa-file"></span> 81 传记</a></li>
+                    <li><a href="#" title="K85"><span class="fa fa-file"></span> 85 文物考古</a></li>
+                    <li><a href="#" title="K89"><span class="fa fa-file"></span> 89 风俗习惯</a></li>
+                    <li><a href="#" title="K9"><span class="fa fa-file"></span> 9 地理</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end K -->
+        <!-- begin N  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> N 自然科学总论</b></a>
+                <ul><li><a href="#" title="N0"><span class="fa fa-file"></span> 0 自然科学理论与方法论</a></li>
+                    <li><a href="#" title="N1"><span class="fa fa-file"></span> 1 自然科学现状及发展</a></li>
+                    <li><a href="#" title="N2"><span class="fa fa-file"></span> 2 自然科学机关、团体、会议</a></li>
+                    <li><a href="#" title="N3"><span class="fa fa-file"></span> 3 自然科学研究方法</a></li>
+                    <li><a href="#" title="N4"><span class="fa fa-file"></span> 4 自然科学教育及普及</a></li>
+                    <li><a href="#" title="N5"><span class="fa fa-file"></span> 5 自然科学丛书、文集、连续性出版物</a></li>
+                    <li><a href="#" title="N6"><span class="fa fa-file"></span> 6 自然科学参考工具书</a></li>
+                    <li><a href="#" title="N8"><span class="fa fa-file"></span> 8 自然科学调查、考察</a></li>
+                    <li><a href="#" title="N91"><span class="fa fa-file"></span> 91 自然研究、自然历史</a></li>
+                    <li><a href="#" title="N93"><span class="fa fa-file"></span> 93 非线性科学</a></li>
+                    <li><a href="#" title="N94"><span class="fa fa-file"></span> 94 系统科学</a></li>
+                 </ul>
+             </li>
+        </ul>
+        <!-- end N -->
+        <!-- begin O  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> O 数理科学和化学</b></a>
+                <ul><li><a href="#" title="O1"><span class="fa fa-file"></span> 1 数学</a></li>
+                    <li><a href="#" title="O3"><span class="fa fa-file"></span> 3 力学</a></li>
+                    <li><a href="#" title="O4"><span class="fa fa-file"></span> 4 物理学</a></li>
+                    <li><a href="#" title="O6"><span class="fa fa-file"></span> 6 化学</a></li>
+                    <li><a href="#" title="O7"><span class="fa fa-file"></span> 7 晶体学</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end O -->
+        <!-- begin P  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> P 天文学、地球科学</b></a>
+                <ul><li><a href="#" title="P1"><span class="fa fa-file"></span> 1 天文学</a></li>
+                    <li><a href="#" title="P2"><span class="fa fa-file"></span> 2 测绘学</a></li>
+                    <li><a href="#" title="P3"><span class="fa fa-file"></span> 3 地球物理学</a></li>
+                    <li><a href="#" title="P4"><span class="fa fa-file"></span> 4 大气科学（气象学）</a></li>
+                    <li><a href="#" title="P5"><span class="fa fa-file"></span> 5 地质学</a></li>
+                    <li><a href="#" title="P7"><span class="fa fa-file"></span> 7 海洋学</a></li>
+                    <li><a href="#" title="P9"><span class="fa fa-file"></span> 9 自然地理学</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end P -->
+        <!-- begin Q  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> Q 生物科学</b></a>
+                <ul><li><a href="#" title="Q1"><span class="fa fa-file"></span> 1 普通生物学</a></li>
+                    <li><a href="#" title="Q2"><span class="fa fa-file"></span> 2 细胞学</a></li>
+                    <li><a href="#" title="Q3"><span class="fa fa-file"></span> 3 遗传学</a></li>
+                    <li><a href="#" title="Q4"><span class="fa fa-file"></span> 4 生理学</a></li>
+                    <li><a href="#" title="Q5"><span class="fa fa-file"></span> 5 生物化学</a></li>
+                    <li><a href="#" title="Q6"><span class="fa fa-file"></span> 6 生物物理学</a></li>
+                    <li><a href="#" title="Q7"><span class="fa fa-file"></span> 7 分子生物学</a></li>
+                    <li><a href="#" title="Q81"><span class="fa fa-file"></span> 81 生物工程学（生物技术）</a></li>
+                    <li><a href="#" title="Q91"><span class="fa fa-file"></span> 91 古生物学</a></li>
+                    <li><a href="#" title="Q93"><span class="fa fa-file"></span> 93 微生物学</a></li>
+                    <li><a href="#" title="Q94"><span class="fa fa-file"></span> 94 植物学</a></li>
+                    <li><a href="#" title="Q95"><span class="fa fa-file"></span> 95 动物学</a></li>
+                    <li><a href="#" title="Q96"><span class="fa fa-file"></span> 96 昆虫学</a></li>
+                    <li><a href="#" title="Q98"><span class="fa fa-file"></span> 98 人类学</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end Q -->
+        <!-- begin R  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> R 医药、卫生</b></a>
+                <ul><li><a href="#" title="R1"><span class="fa fa-file"></span> 1 预防医学、卫生学</a></li>
+                    <li><a href="#" title="R2"><span class="fa fa-file"></span> 2 中国医学</a></li>
+                    <li><a href="#" title="R3"><span class="fa fa-file"></span> 3 基础医学</a></li>
+                    <li><a href="#" title="R4"><span class="fa fa-file"></span> 4 临床医学</a></li>
+                    <li><a href="#" title="R5"><span class="fa fa-file"></span> 5 内科学</a></li>
+                    <li><a href="#" title="R6"><span class="fa fa-file"></span> 6 外科学</a></li>
+                    <li><a href="#" title="R71"><span class="fa fa-file"></span> 71 妇产科学</a></li>
+                    <li><a href="#" title="R72"><span class="fa fa-file"></span> 72 儿科学</a></li>
+                    <li><a href="#" title="R73"><span class="fa fa-file"></span> 73 肿瘤学</a></li>
+                    <li><a href="#" title="R74"><span class="fa fa-file"></span> 74 神经病学与精神病学</a></li>
+                    <li><a href="#" title="R75"><span class="fa fa-file"></span> 75 皮肤病学与性病学</a></li>
+                    <li><a href="#" title="R76"><span class="fa fa-file"></span> 76 耳鼻喉科学</a></li>
+                    <li><a href="#" title="R77"><span class="fa fa-file"></span> 77 眼科学</a></li>
+                    <li><a href="#" title="R78"><span class="fa fa-file"></span> 78 口腔科学</a></li>
+                    <li><a href="#" title="R79"><span class="fa fa-file"></span> 79 外国民族医学</a></li>
+                    <li><a href="#" title="R8"><span class="fa fa-file"></span> 8 特种医学</a></li>
+                    <li><a href="#" title="R9"><span class="fa fa-file"></span> 9 药学</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end R -->
+        <!-- begin S  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> S 农业科学</b></a>
+                <ul><li><a href="#" title="S1"><span class="fa fa-file"></span> 1 农业基础科学</a></li>
+                    <li><a href="#" title="S2"><span class="fa fa-file"></span> 2 农业工程</a></li>
+                    <li><a href="#" title="S3"><span class="fa fa-file"></span> 3 农学（农艺学）</a></li>
+                    <li><a href="#" title="S4"><span class="fa fa-file"></span> 4 植物保护</a></li>
+                    <li><a href="#" title="S5"><span class="fa fa-file"></span> 5 农作物</a></li>
+                    <li><a href="#" title="S6"><span class="fa fa-file"></span> 6 园艺</a></li>
+                    <li><a href="#" title="S7"><span class="fa fa-file"></span> 7 林业</a></li>
+                    <li><a href="#" title="S8"><span class="fa fa-file"></span> 8 畜牧、兽医、狩猎、蚕、蜂</a></li>
+                    <li><a href="#" title="S9"><span class="fa fa-file"></span> 9 水产、渔业</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end S -->
+        <!-- begin T  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> T 工业技术</b></a>
+                <ul><li><a href="#" title="TB"><span class="fa fa-file"></span> TB 一般工业技术 </a></li>
+                    <li><a href="#" title="TD"><span class="fa fa-file"></span> TD 矿业工程</a></li>
+                    <li><a href="#" title="TE"><span class="fa fa-file"></span> TE 石油、天然气工程</a></li>
+                    <li><a href="#" title="TF"><span class="fa fa-file"></span> TF 冶金工业</a></li>
+                    <li><a href="#" title="TH"><span class="fa fa-file"></span> TH 机械、仪表工业</a></li>
+                    <li><a href="#" title="TJ"><span class="fa fa-file"></span> TJ 武器工业</a></li>
+                    <li><a href="#" title="TL"><span class="fa fa-file"></span> TL 原子能技术</a></li>
+                    <li><a href="#" title="TM"><span class="fa fa-file"></span> TM 电工技术</a></li>
+                    <li><a href="#" title="TN"><span class="fa fa-file"></span> TN 电子技术、通信技术</a></li>
+                    <li><a href="#" title="TP"><span class="fa fa-file"></span> TP 自动化技术、计算技术</a></li>
+                    <li><a href="#" title="TQ"><span class="fa fa-file"></span> TQ 化学工业</a></li>
+                    <li><a href="#" title="TS"><span class="fa fa-file"></span> TS 轻工业、手工业</a></li>
+                    <li><a href="#" title="TU"><span class="fa fa-file"></span> TU 建筑科学</a></li>
+                    <li><a href="#" title="TV"><span class="fa fa-file"></span> TV 水利工程</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end T -->
+        <!-- begin U  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> U 交通运输</b></a>
+                <ul><li><a href="#" title="U1"><span class="fa fa-file"></span> 1 综合运输 </a></li>
+                    <li><a href="#" title="U2"><span class="fa fa-file"></span> 2 铁路运输</a></li>
+                    <li><a href="#" title="U3"><span class="fa fa-file"></span> 3 公路运输</a></li>
+                    <li><a href="#" title="U6"><span class="fa fa-file"></span> 6 水路运输</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end U -->
+        <!-- begin V  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> V 航空、航天</b></a>
+                <ul><li><a href="#" title="V1"><span class="fa fa-file"></span> 1 航空、航天技术的研究与探索 </a></li>
+                    <li><a href="#" title="V2"><span class="fa fa-file"></span> 2 航空</a></li>
+                    <li><a href="#" title="V3"><span class="fa fa-file"></span> 3 航天（宇宙航行）</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end V -->
+        <!-- begin X  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> X 环境科学、安全科学</b></a>
+                <ul><li><a href="#" title="X1"><span class="fa fa-file"></span> 1 环境科学基础理论 </a></li>
+                    <li><a href="#" title="X2"><span class="fa fa-file"></span> 2 社会与环境</a></li>
+                    <li><a href="#" title="X3"><span class="fa fa-file"></span> 3 环境保护管理</a></li>
+                    <li><a href="#" title="X4"><span class="fa fa-file"></span> 4 灾害及其防治</a></li>
+                    <li><a href="#" title="X5"><span class="fa fa-file"></span> 5 环境污染及其防治</a></li>
+                    <li><a href="#" title="X7"><span class="fa fa-file"></span> 7 废物处理与综合利用</a></li>
+                    <li><a href="#" title="X8"><span class="fa fa-file"></span> 8 环境质量评价与环境监测</a></li>
+                    <li><a href="#" title="X9"><span class="fa fa-file"></span> 9 安全科学</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end X -->
+        <!-- begin Z  -->
+        <ul class="metisFolder">
+            <li><a href="#"><span class="fa fa-folder-o"></span><b> Z 综合性图书</b></a>
+                <ul><li><a href="#" title="Z1"><span class="fa fa-file"></span> 1 丛书 </a></li>
+                    <li><a href="#" title="Z2"><span class="fa fa-file"></span> 2 百科全书、类书</a></li>
+                    <li><a href="#" title="Z3"><span class="fa fa-file"></span> 3 辞典</a></li>
+                    <li><a href="#" title="Z4"><span class="fa fa-file"></span> 4 论文集、全集、选集、杂著</a></li>
+                    <li><a href="#" title="Z5"><span class="fa fa-file"></span> 5 年鉴、年刊</a></li>
+                    <li><a href="#" title="Z6"><span class="fa fa-file"></span> 6 期刊、连续性出版物</a></li>
+                    <li><a href="#" title="Z8"><span class="fa fa-file"></span> 8 图书目录、文摘、索引</a></li>
+                </ul>
+            </li>
+        </ul>
+        <!-- end Z -->
+    </nav>
+
+    </div>
+    <!-- End ModelTree  -->
+</div>
+<script>
+$("#navAllBooks").addClass("active");
+//ModelTree
+$('.metisFolder').metisMenu({
+    toggle: false
+});
+$('#bookTable tfoot th').each( function () {
+    if($(this).text()) {
+        var title = $('#bookTable thead th').eq($(this).index()).text();
+        if (title !== "馆藏类型") {
+            $(this).html('<input type="text" placeholder="搜索 '+title+'" />');
+        }
+    }
+});
+var table = $('#bookTable').DataTable({
+    "scrollX": true,
+    "language": language
+});
+table.columns().eq(0).each(function(colIdx) {
+    $('input, select', table.column(colIdx).footer()).on('keyup change', function() {
+        table.column(colIdx).search(this.value).draw();
+    });
+});
+$("div.modelTree a[title]").on('click', function() {
+    table.column(5).search($(this).attr('title')).draw();
+});
+@if(keyword){
+    table.search("@keyword", true, true).draw();
+}
+</script>
+}

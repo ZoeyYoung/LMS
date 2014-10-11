@@ -1,0 +1,78 @@
+@(information: Information, msg : String = "")
+@import helper._
+@import bootstrap3._
+@adminMain("消息管理") {
+<div class="row">
+        <div class="col-md-8">
+        @if("update" == msg){
+            <form name="newForm" class="form-horizontal well" action="/admin/information/@information.id/update" method="POST" role="form">
+                <div class="form-group">
+                    <label for="informationTitle" class="col-sm-2 control-label">主题 *</label>
+                    <div class="col-sm-10">
+                    <input type="text" id="informationTitle" name="informationTitle-@information.id"
+                        value="@information.informationTitle"
+                        class="form-control input-sm" placeholder="消息主题">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="receiveNum" class="col-sm-2 control-label">接收人</label>
+                    <div class="col-sm-10">
+                    <input type="text" id="cardID" name="cardID-@information.id" class="form-control input-sm" readonly="readonly" value="@if(information.cardID == "-1") { 所有人 }else{ @information.cardID}" style="width:300px;" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="informationContent" class="col-sm-2 control-label">消息内容 *</label>
+                    <div class="col-sm-10">
+                    <textarea id="informationContent" name="informationContent-@information.id" rows="20" class="form-control" placeholder="消息内容">@information.informationContent</textarea>
+                    <span id="msg3" style="color:red; font-size:12px;"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-primary"
+                            onclick="updateInfo();return false;">确认修改</button>
+                        <a href="/admin/information" class="btn btn-default">取消</a>
+                    </div>
+                </div>
+           </form>
+        } else {
+          <div id="showInformation">
+            <input type="hidden" name="id-@information.id" value="@information.id"/>
+            <dl class="dl-horizontal well">
+              <dt>主题:</dt>
+              <dd>@information.informationTitle</dd>
+              <br/>
+              <dt>创建日期:</dt>
+              <dd>@information.createDate</dd>
+              <br>
+              <dt>消息内容:</dt>
+              <dd>@information.informationContent</dd>
+            </dl>
+            <a href="/admin/information" class="btn btn-primary">返回</a>
+            <a href="/admin/information/@information.id/show?msg=update" class="btn btn-primary">修改</a>
+          </div>
+        }
+    </div>
+</div>
+<script>
+$("#informationAdmin").addClass("active");
+$("#informationAdmin").parent().parent().parent().addClass("active").children('ul').collapse('toggle');
+function updateInfo() {
+    // 主题验证
+    var informationTitle = $("#informationTitle");
+    var title = informationTitle.val();
+    if(title.replace(/^\s+|\s+$/g,'').length == 0) {
+        informationTitle.parents('div.form-group').addClass("has-error");
+        return;
+    }
+    // 内容验证
+    var informationContent = $("#informationContent");
+    var content = informationContent.val();
+    if( content.replace(/^\s+|\s+$/g,'').length == 0) {
+        informationContent.parents('div.form-group').addClass("has-error");
+        return;
+    }
+    newForm.submit();
+}
+</script>
+}

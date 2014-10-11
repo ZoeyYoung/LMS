@@ -1,0 +1,173 @@
+@adminMain("统计报表") {
+<script src="@routes.Assets.at("javascripts/esl.js")" type="text/javascript"></script>
+<!-- Page Heading -->
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">书刊借阅榜(TOP10)</div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+                        <div id="chart1" style="height:400px"></div>
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">书刊点赞榜(TOP10)</div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+                        <div id="chart2" style="height:400px"></div>
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">读者借阅榜(TOP10)</div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+                        <div id="chart3" style="height:400px"></div>
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.row -->
+<script type="text/javascript">
+$("#navCharts").addClass("active");
+// 路径配置
+require.config({
+    paths: {
+        'echarts' : 'http://echarts.baidu.com/build/echarts',
+        'echarts/chart/bar' : 'http://echarts.baidu.com/build/echarts'
+    }
+});
+// 使用
+require(
+    [
+        'echarts',
+        'echarts/chart/bar' // 使用柱状图就加载bar模块，按需加载
+    ],
+    function (ec) {
+        $.getJSON("/admin/topBorrowed/10").done(function(data) {
+            // 基于准备好的dom，初始化echarts图表
+            var myChart = ec.init(document.getElementById('chart1'));
+            var arr = [];
+            for (var i = 0, blen = data.booknames.length; i < blen; i++) {
+                arr.push();
+            }
+            var option = {
+                title : {
+                    text: '被借阅次数较多的书刊'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    show: true
+                },
+                legend: {
+                    data: ['被借阅次数', '点赞数']
+                },
+                xAxis: [
+                    {
+                        type : 'value'
+                    }
+                ],
+                yAxis: [
+                    {
+                        type : 'category',
+                        data : data.booknames
+                    }
+                ],
+                series: [
+                    {
+                        "name": '被借阅次数',
+                        "type": "bar",
+                        "data": data.borrowedTimes
+                    }, {
+                        "name": '点赞数',
+                        "type": "bar",
+                        "data": data.heartedTimes
+                    }
+                ]
+            };
+            // 为echarts对象加载数据
+            myChart.setOption(option);
+        });
+        $.getJSON("/admin/topHearted/10").done(function(data) {
+            // 基于准备好的dom，初始化echarts图表
+            var myChart = ec.init(document.getElementById('chart2'));
+            var option = {
+                tooltip: {
+                    show: true
+                },
+                legend: {
+                    data:['点赞数']
+                },
+                xAxis: [
+                    {
+                        type : 'category',
+                        data : data.booknames
+                    }
+                ],
+                yAxis: [
+                    {
+                        type : 'value'
+                    }
+                ],
+                series: [
+                    {
+                        "name": "点赞数",
+                        "type": "bar",
+                        "data": data.heartedTimes
+                    }
+                ]
+            };
+            // 为echarts对象加载数据
+            myChart.setOption(option);
+        });
+        $.getJSON("/admin/topBorrowReader/10").done(function(data) {
+            // 基于准备好的dom，初始化echarts图表
+            var myChart = ec.init(document.getElementById('chart3'));
+            var option = {
+                tooltip: {
+                    show: true
+                },
+                legend: {
+                    data:['借阅次数']
+                },
+                xAxis: [
+                    {
+                        type : 'category',
+                        data : data.readernames
+                    }
+                ],
+                yAxis: [
+                    {
+                        type : 'value'
+                    }
+                ],
+                series: [
+                    {
+                        "name": "借阅次数",
+                        "type": "bar",
+                        "data": data.borrowTimes
+                    }
+                ]
+            };
+            // 为echarts对象加载数据
+            myChart.setOption(option);
+        });
+    }
+);
+</script>
+}

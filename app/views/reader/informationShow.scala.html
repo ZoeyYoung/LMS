@@ -1,0 +1,15 @@
+@(information: Information)
+@import helper._
+@import bootstrap3._
+@readerMain("消息") {
+<div class="row">
+    <div class="col-md-8">
+        <h3>@information.informationTitle <small>@information.createDate</small></h3><hr/>
+        @information.informationContent<hr>
+        <a href="/reader/index" class="btn btn-primary" style="width:50px; height:36px; padding: 6px 6px; margin-bottom: 3px;">返回</a>
+    </div>
+</div>
+<script>
+$("#navIndex").addClass("active");
+</script>
+}

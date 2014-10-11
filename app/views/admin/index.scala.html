@@ -1,0 +1,122 @@
+@(unhandledOrderSize: Long, infos: List[Information])
+@adminMain("欢迎使用FNST图书馆系统") {
+<style>
+.huge {
+    font-size:24px;
+}
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 hidden-xs hidden-sm">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-book fa-3x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">图书入库</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/admin/books/newBook">
+                            <div class="panel-footer">
+                                <span class="pull-left">新书上架</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+               <div class="col-lg-3 col-md-3 hidden-xs hidden-sm">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-tasks fa-3x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">书刊借阅</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/admin/borrows/borrow">
+                            <div class="panel-footer">
+                                <span class="pull-left">借书-还书-续借</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 hidden-xs hidden-sm">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-shopping-cart fa-3x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">购书请求</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/admin/orders">
+                            <div class="panel-footer">
+                                <span class="pull-left">@unhandledOrderSize 条未处理的购书请求</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 hidden-xs hidden-sm">
+                    <div class="panel panel-red">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-comments fa-3x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">发布公告</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/admin/information">
+                            <div class="panel-footer">
+                                <span class="pull-left">有新活动吗？</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">消息提醒</div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                        @if(infos.size()>0){
+                            @for(info <- infos){
+                            <div class="list-group">
+                              <div href="#" class="list-group-item">
+                                <h3 class="list-group-item-heading text-primary">系统消息 <small> @info.createDate </small></h3>
+                                <p class="list-group-item-text"><a href="/admin/information/@info.id/show">@info.informationTitle</a></p>
+                              </div>
+                            </div>
+                            }
+                        }else{ 还没有系统消息 }
+                        </div>
+                        <!-- .panel-body -->
+                    </div>
+            </div>
+    </div>
+</div>
+<script>
+$("#navIndex").addClass("active");
+</script>
+}

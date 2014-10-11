@@ -1,0 +1,98 @@
+@(readerCates: List[ReaderCate], readerCateForm: Form[views.form.ReaderCateForm], message: String = "")
+@import helper._
+@import bootstrap3._
+@adminMain("借阅权限") {
+<div class="row">
+    <div class="col-md-12">
+        @if(message != "") {
+            <p id="commonMsg" class="bg-danger" role="alert">@message</p>
+        }
+        @table("readerCatesTable") {
+            <tr>
+                <th>读者类别</th>
+                <th width="100px">可借书数</th>
+                <th width="100px">可借天数</th>
+                <th width="150px">可续借次数</th>
+                <th width="200px">每次可续借天数</th>
+                <th width="100px">操作</th>
+            </tr>
+        } {
+            @for(readerCate <- readerCates) {
+            <tr>
+                <td class="data">@readerCate.readerCateName</td>
+                <td class="data">@readerCate.limitBooksCount</td>
+                <td class="data">@readerCate.limitDays</td>
+                <td class="data">@readerCate.reLoanTimes</td>
+                <td class="data">@readerCate.reLoanDays</td>
+                <td>
+                    @form(routes.ReaderCateCtrl.deleteReaderCate(readerCate.id)) {
+                    <div class="btn-group">
+                        <button class="btn btn-primary btn-xs" onclick="setForm(this);return false;">
+                            <i class="fa fa-pencil-square-o"></i>
+                        </button>
+                        <button type="submit" class="btn btn-danger btn-xs">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                    }
+                </td>
+                @form(routes.ReaderCateCtrl.updateReaderCate(readerCate.id)){
+                <td style="display:none">
+                    <input type="hidden" name="id-@readerCate.id" value="@readerCate.id"/>
+                    <input type="hidden" name="readerCateName-@readerCate.id" value="@readerCate.readerCateName"/>
+                    @readerCate.readerCateName
+                </td>
+                <td style="display:none">
+                    <input type="text" name="limitBooksCount-@readerCate.id" value="@readerCate.limitBooksCount"/>
+                </td>
+                <td style="display:none">
+                    <input type="text" name="limitDays-@readerCate.id" value="@readerCate.limitDays"/>
+                </td>
+                <td style="display:none">
+                    <input type="text" name="reLoanTimes-@readerCate.id" value="@readerCate.reLoanTimes"/>
+                </td>
+                <td style="display:none">
+                    <input type="text" name="reLoanDays-@readerCate.id" value="@readerCate.reLoanDays"/>
+                </td>
+                <td style="display:none">
+                    <input type="submit" value="提交" class="btn btn-success btn-xs"/>
+                    <input type="button" id="cancel" value="取消" class="btn btn-default btn-xs" onclick="cancelFrom(this);return false;"/>
+                </td>
+                }
+            </tr>
+            }
+            <tr>
+                @form(routes.ReaderCateCtrl.newReaderCate()){
+                <td>@simpletext(readerCateForm("readerCateName"),
+                        placeholder = "读者类别")
+                </td>
+                <td>@simpletext(readerCateForm("limitBooksCount"),
+                        placeholder = "可借书数", size="5")
+                </td>
+                <td>@simpletext(readerCateForm("limitDays"),
+                        placeholder = "可借天数", size="5")</td>
+                <td>@simpletext(readerCateForm("reLoanTimes"),
+                        placeholder = "可续借次数", size="5")</td>
+                <td>@simpletext(readerCateForm("reLoanDays"),
+                        placeholder = "每次可续借天数", size="5")</td>
+                <td><button type="submit" class="btn btn-primary">添加</button></td>
+                }
+            </tr>
+        }
+    </div>
+<div>
+<script>
+$("#navReaderCates").addClass("active");
+$("#navReaderCates").parent().parent().parent().addClass("active").children('ul').collapse('toggle');
+function setForm(e) {
+    $(e).parents('tr').children('td[class=data]').hide();
+    $(e).parents('tr').children('td').has('input').show();
+    $(e).parents('td').hide();
+}
+function cancelFrom(e) {
+    $(e).parents('tr').children('td[class=data]').show();
+    $(e).parents('tr').children('td').has('input').hide();
+    $(e).parents('tr').children('td').has('button').show();
+}
+</script>
+}

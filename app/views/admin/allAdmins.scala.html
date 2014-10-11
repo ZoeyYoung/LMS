@@ -1,0 +1,201 @@
+@(admins: List[Admin])
+@import helper._
+@import bootstrap3._
+@adminMain("管理员设置") {
+<div class="row">
+    <div class="col-sm-5 col-md-12 col-lg-8">
+        <form name="newForm" action="/admin/adminManager/new" method="POST" class="form-inline well">
+            <div class="form-group" id="adminNameDiv">
+                <input type="text" id="adminName" name="adminName"
+                        class="form-control input-sm" style="width:200px;"
+                        maxLength="20" placeholder="管理员名">
+            </div>
+            <div class="form-group" id="adminPasswordDiv">
+                <input type="password" id="adminPassword" name="adminPassword"
+                        class="form-control input-sm" style="width:200px;"
+                        maxLength="20" placeholder="密码">
+            </div>
+            <div class="form-group" id="adminMailDiv">
+                <input type="text" id="adminMail" name="adminMail"
+                        class="form-control input-sm" style="width:200px;" placeholder="邮箱">
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-primary"
+                        onclick="addAdmin();return false;"
+                        style="width:50px; height:36px; padding: 1px 6px;">添加</button>
+            </div>
+        </form>
+        <div id="msg" class="bg-danger"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <br/>
+        @table("adminTable"){
+        <tr>
+            <th>管理员</th>
+            <th>密码</th>
+            <th>邮箱</th>
+            <th style="width:100px;">操作</th>
+        </tr>
+        }{
+        @for(admin <- admins){
+        <tr>
+            <td class="data">@admin.adminName</td>
+            <td class="data">******</td>
+            <td class="data">@admin.adminMail</td>
+            <td>
+                @form(routes.AdminCtrl.deleteAdmin(admin.id)) {
+                    <div class="btn-group">
+                        <button class="btn btn-primary btn-xs" onclick="setForm(this);return false;">
+                            <i class="fa fa-pencil-square-o" ></i>
+                        </button>
+                        <button type="submit" class="btn btn-danger btn-xs">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                }
+            </td>
+            <form id="updateForm@admin.id" action="/admin/adminManager/@admin.id/update" method="POST" class="form-inline">
+            <td style="display:none" class="form-group">
+                <input type="hidden" id="id-@admin.id"
+                        name="id-@admin.id" value="@admin.id"/>
+                <input type="text" id="adminName-@admin.id"
+                        class="form-control input-sm"
+                        name="adminName-@admin.id"
+                        value="@admin.adminName" maxLength="20"/>
+            </td>
+            <td style="display:none" class="form-group">
+                <input type="password" id="adminPassword-@admin.id"
+                        name="adminPassword-@admin.id"
+                        class="form-control input-sm"
+                        value="@admin.adminPassword" maxLength="20"/>
+            </td>
+            <td style="display:none">
+                <div class="form-group">
+                <input type="text" id="adminMail-@admin.id"
+                        class="form-control input-sm"
+                        name="adminMail-@admin.id"
+                        value="@admin.adminMail"/>
+                </div>
+            </td>
+            <td style="display:none">
+                <input type="button" value="修改" onclick="updateAdmin(@admin.id,'@admin.adminName');return false;" class="btn btn-success btn-xs"/>
+                <input type="button" id="cancel" value="取消" class="btn btn-default btn-xs" onclick="cancelFrom(this);return false;"/>
+            </td>
+            </form>
+        </tr>
+        }
+        }
+    </div>
+</div>
+<script>
+$("#navShowAdmin").addClass("active");
+$("#navShowAdmin").parent().parent().parent().addClass("active").children('ul')
+        .collapse('toggle');
+$("#msg").hide();
+$("input").on('change', function() {
+    $("#msg").hide();
+    $("input").parents(".form-group").removeClass("has-error");
+});
+function addAdmin() {
+    var errMsg = "";
+    // TODO 输入名字
+    var adminName = $("#adminName").val();
+    if(adminName.replace(/^\s+|\s+$/g,'').length == 0 ) {
+        errMsg += "* 管理员名不能为空<br>";
+        $("#adminNameDiv").addClass("has-error");
+        $("#msg").html(errMsg);
+        return;
+    }
+    $.get("/admin/adminManager/" + adminName + "/check").done(function(data) {
+        if (data === "true") {
+            errMsg += "* 管理员已存在<br>";
+            $("#adminNameDiv").addClass("has-error");
+        }
+        // TODO 检查密码
+        var adminPassword = $("#adminPassword").val();
+        if(adminPassword.replace(/^\s+|\s+$/g,'').length == 0 ) {
+            $("#adminPasswordDiv").addClass("has-error");
+            errMsg += "* 密码不能为空<br>";
+        }
+        // TODO 检查邮箱，验证邮箱
+        var adminMail = $("#adminMail").val();
+        var filterMail  = /^[\w-]+(\.[\w-]+)*@@[\w-]+(\.[\w-]+)+$/;
+        if(adminMail.replace(/^\s+|\s+$/g,'').length == 0 ) {
+            errMsg += "* 邮件不能为空<br>";
+            $("#adminMailDiv").addClass("has-error");
+        } else if (!filterMail.test(adminMail)){
+            errMsg += "* 邮件格式不正确<br>";
+            $("#adminMailDiv").addClass("has-error");
+        }
+        if (errMsg) {
+            $("#msg").html(errMsg);
+            $("#msg").show();
+            return;
+        }
+        newForm.submit();
+    });
+}
+
+function updateAdmin(id, name) {
+    var errMsg = "";
+    // TODO 验证名称
+    var adminName = $("#adminName-"+id).val();
+    if(adminName.replace(/^\s+|\s+$/g,'').length == 0 ) {
+        $("#adminName-"+id).parents(".form-group").addClass("has-error");
+        errMsg += "* 修改用户名不能为空<br>";
+    }
+    // TODO 检查密码长度
+    var adminPassword = $("#adminPassword-"+id).val();
+    if(adminPassword.replace(/^\s+|\s+$/g,'').length == 0 ) {
+        $("#adminPassword-"+id).parents(".form-group").addClass("has-error");
+        errMsg += "* 修改密码不能为空<br>";
+    }
+    var adminMail = $("#adminMail-"+id).val();
+    var filterMail  = /^[\w-]+(\.[\w-]+)*@@[\w-]+(\.[\w-]+)+$/;
+    if(adminMail.replace(/^\s+|\s+$/g,'').length == 0 ) {
+        $("#adminMail-"+id).parents(".form-group").addClass("has-error");
+       errMsg += "* 修改邮件不能为空<br>";
+    } else if (!filterMail.test(adminMail) ){
+        $("#adminMail-"+id).parents(".form-group").addClass("has-error");
+        errMsg += "* 修改邮件格式不正确<br>";
+    }
+    if (adminName != name) {
+        $.get("/admin/adminManager/" + adminName + "/check").done(function(data) {
+            if (data === "true") {
+                errMsg += "* 管理员已存在<br>";
+                $("#adminNameDiv").addClass("has-error");
+            }
+
+            if (errMsg) {
+                $("#msg").html(errMsg);
+                $("#msg").show();
+                return;
+            }
+            $("#updateForm"+id).submit();
+        });
+    } else {
+        if (errMsg) {
+            $("#msg").html(errMsg);
+            $("#msg").show();
+            return;
+        }
+        $("#updateForm"+id).submit();
+    }
+}
+
+function setForm(e) {
+    $(e).parents('tr').children('td[class=data]').hide();
+    $(e).parents('tr').children('td').has('input').show();
+    $(e).parents('td').hide();
+}
+function cancelFrom(e) {
+    $("#msg").hide();
+    $("input").parents(".form-group").removeClass("has-error");
+    $(e).parents('tr').children('td[class=data]').show();
+    $(e).parents('tr').children('td').has('input').hide();
+    $(e).parents('tr').children('td').has('button').show();
+}
+</script>
+}

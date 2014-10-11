@@ -1,0 +1,43 @@
+@(readers: List[views.table.ReaderTable])
+@import bootstrap3._
+@adminMain("读者信息") {
+<div class="row">
+    <div class="col-md-12">
+        @table("readerTable"){
+            <tr>
+                <th>读者姓名</th>
+                <th>输入码</th>
+                <th>读者编码</th>
+                <th>证卡编码</th>
+                <th>读者类别</th>
+                <th>性别</th>
+                <th>所在部门</th>
+                <th>Email</th>
+                <th>注册日期</th>
+            </tr>
+        }{
+            @for(reader <- readers) {
+            <tr>
+                <td>@reader.id</td>
+                <td>@reader.readerName</td>
+                <td>@reader.readerInputCode</td>
+                <td>@reader.readerCode</td>
+                <td>@reader.readerCateName</td>
+                <td>@reader.sex</td>
+                <td>@reader.deptName</td>
+                <td>@reader.email</td>
+                <td>@reader.regDate</td>
+            </tr>
+            }
+        }
+    </div>
+</div>
+<script>
+$("#navReaders").addClass("active");
+$("#navReaders").parent().parent().parent().addClass("active").children('ul').collapse('toggle');
+$("#readerTable").dataTable({
+    "pageLength": 20,
+    "language": language
+});
+</script>
+}

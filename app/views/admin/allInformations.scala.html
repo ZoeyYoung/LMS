@@ -1,0 +1,132 @@
+@(informations: List[Information])
+@import helper._
+@import bootstrap3._
+@adminMain("消息管理") {
+<div class="row">
+    <div class="col-md-8">
+        @table("AllInformations"){
+            <tr>
+                <th>主题</th>
+                <th>日期</th>
+                <th>接收者</th>
+                <th style="width:100px;">操作</th>
+            </tr>
+        }{
+            @for(information <- informations){
+            <tr>
+                <td class="data" id="@information.id"><a href="/admin/information/@information.id/show">@information.informationTitle</a></td>
+                <td class="data">@information.createDate</td>
+                <td class="data">
+                @if(information.cardID == "-1"){ 所有人 }else{ @information.cardID }</td>
+                <td>
+                    @form(routes.InformationCtrl.deleteInformation(information.id)) {
+                    <div class="btn-group">
+                        <a class="btn btn-primary btn-xs" href="/admin/information/@information.id/show?msg=update">
+                            <i class="fa fa-pencil-square-o" ></i>
+                        </a>
+                        <button type="submit" class="btn btn-danger btn-xs">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                    }
+                </td>
+            </tr>
+            }
+        }
+        <button type="button" class="btn btn-primary" onclick="showAdd(this);return false;" style="width:150px;">添加信息</button>
+        <div id="addInformation">
+            <form name="newForm" action="/admin/information/new" class="form-horizontal well" method="POST" role="form">
+                <div class="form-group">
+                    <label for="informationTitle" class="col-sm-2 control-label">主题 *</label>
+                    <div class="col-sm-10">
+                        <input type="text" id="informationTitle" name="informationTitle" class="form-control input-sm" placeholder="消息主题">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="receiveNum" class="col-sm-2 control-label">接收人 *</label>
+                    <div class="col-sm-10">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <select class="form-control input-sm" id="receiveNum" style="width:100px;" onchange="changeReceive(this);">
+                                    <option class="blank" value="-1" selected="selected">全部</option>
+                                    <option value="1">个人</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-10">
+                                <input type="text" id="cardID" value="-1" name="cardID" class="form-control input-sm" style="width:300px;" placeholder="请输入6位工号编号" />
+                                <span id="msg2" class="help-block"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="informationContent" class="col-sm-2 control-label">消息内容 *</label>
+                    <div class="col-sm-10">
+                    <textarea id="informationContent" name="informationContent"
+                        rows="20" class="form-control" placeholder="消息内容"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" class="btn btn-primary" onclick="addinformation();return false;">添加</button>
+                        <a href="/admin/information" class="btn btn-default">取消</a>
+                    </div>
+                </div>
+           </form>
+         </div>
+    </div>
+</div>
+<script>
+$("#informationAdmin").addClass("active");
+$("#informationAdmin").parent().parent().parent().addClass("active").children('ul').collapse('toggle');
+$("#addInformation").hide();
+$("#cardID").hide();
+function showAdd(e) {
+    $(e).hide();
+    $("#AllInformations").hide();
+    $("#addInformation").show();
+}
+function changeReceive(e){
+    var value = $(e).val();
+    var cardID = $("#cardID");
+    if(value == "-1") {
+        cardID.val("-1");
+        cardID.hide();
+    } else if( value == "1") {
+        cardID.val("");
+        cardID.show();
+    }
+}
+
+function addinformation() {
+    // 主题验证
+    var informationTitle = $("#informationTitle");
+    var title = informationTitle.val();
+    if(title.replace(/^\s+|\s+$/g,'').length == 0) {
+        informationTitle.parents('div.form-group').addClass("has-error");
+        return;
+    }
+    // 读者验证
+    var value = $("#receiveNum").val();
+    if(value == "1") {
+        var cardID = $("#cardID").val();
+        if(cardID.replace(/^\s+|\s+$/g,'').length == 0 ||
+            !(/^\d{6}$/).test(cardID)) {
+            $("#msg2").text("* 员工编号填写不正确!");
+            $("#cardID").parents('div.form-group').addClass("has-error");
+            return;
+        }
+    }
+    // 内容验证
+    var informationContent = $("#informationContent");
+    var content = informationContent.val();
+    if(content.replace(/^\s+|\s+$/g,'').length == 0) {
+        $("#msg3").text("* 内容不能为空!");
+        informationContent.parents('div.form-group').addClass("has-error");
+        return;
+    }
+    newForm.submit();
+}
+
+</script>
+}

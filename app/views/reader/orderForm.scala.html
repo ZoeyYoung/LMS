@@ -1,0 +1,67 @@
+@(orderForm: Form[views.form.OrderForm])
+@import bootstrap3._
+@readerMain("我想读 . . .") {
+<div class="row">
+    <div class="col-lg-6 col-md-8 col-sm-12">
+        <form class="form-horizontal well" action="/reader/orders/newOrder" method="POST">
+        <fieldset>
+            <p id="commonMsg" class="bg-danger" role="alert"></p>
+            @text(orderForm("isbn"),
+                label = "ISBN *", placeholder = "ISBN *", maxlength = "13")
+            @text(orderForm("bookname"),
+                label = "书名 *", placeholder = "书名 *", maxlength = "30")
+            @text(orderForm("author"),
+                label = "著者", placeholder = "著者")
+            @text(orderForm("translator"),
+                label = "译者", placeholder = "译者")
+            @text(orderForm("category"),
+                label = "分类名称", placeholder = "分类名称")
+            @text(orderForm("publisher"),
+                label = "出版社", placeholder = "出版社")
+            @text(orderForm("price"),
+                label = "价格", placeholder = "价格",maxlength = "10")
+            @textarea(orderForm("reason"),
+                label = "购买理由 *", placeholder = "购买理由，少于100字 *",
+                rows = "5",maxlength = "200")
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button id="orderSubmit" type="submit" class="btn btn-success" disabled="disabled">提交</button>
+                </div>
+            </div>
+        </fieldset>
+        </form>
+    </div>
+</div>
+<script>
+$("#navOrderForm").addClass("active");
+$("#navOrderForm").parent().parent().parent().addClass("active").children('ul').collapse('toggle');
+$("#commonMsg").hide();
+var isBookExist = function() {
+    var isbn = $("#isbn").val();
+    if( isbn.replace(/^\s+|\s+$/g,'').length == 0 ) {
+        return;
+    }
+    $.getJSON("/isBookExist/" + isbn).done(function(data) {
+        if (data.isBookExist) {
+            $("#orderSubmit").attr("disabled", "disabled");
+            $("#commonMsg").text("书刊已购入，可直接借阅");
+            $("#commonMsg").show();
+        } else {
+            $("#orderSubmit").removeAttr("disabled");
+        }
+    });
+};
+if ($("isbn")) {
+    isBookExist();
+}
+// 检测ISBN书刊是否已购入
+$("#isbn").blur(function() {
+    isBookExist();
+});
+$("#isbn").change(function() {
+    $("#orderSubmit").attr("disabled", "disabled");
+    $("#commonMsg").text("");
+    $("#commonMsg").hide();
+});
+</script>
+}

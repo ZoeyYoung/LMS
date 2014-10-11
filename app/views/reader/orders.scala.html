@@ -1,0 +1,38 @@
+@(orders: List[views.table.OrderTable])
+@import helper._
+@import bootstrap3._
+@readerMain("我想读的书"){
+<div class="row">
+    <div class="col-md-12">
+        @table(){
+            <tr>
+                <th>ISBN</th>
+                <th>书名</th>
+                <th>购买理由</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+        }{
+            @for(order <- orders) {
+            <tr>
+                <td>@order.isbn</td>
+                <td>@order.bookname</td>
+                <td>@order.reason</td>
+                <td>@order.status</td>
+                <td>@if(order.deleteable) {
+                    @form(routes.OrderCtrl.deleteOrder(order.id)) {
+                        <button type="submit" class="btn btn-danger btn-xs">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    }
+                }</td>
+            </tr>
+            }
+        }
+    </div>
+</div>
+<script>
+$("#navOrders").addClass("active");
+$("#navOrders").parent().parent().parent().addClass("active").children('ul').collapse('toggle');
+</script>
+}

@@ -1,0 +1,110 @@
+@(libraryTypes: List[LibraryType], message: String)
+@import helper._
+@import bootstrap3._
+@adminMain("元数据设置") {
+<div class="row">
+    <div class="col-md-6">
+        @if(message != "") {
+            <p id="commonMsg" class="bg-danger" role="alert">@message</p>
+        }
+        <form name="newForm" action="/admin/libaryMeta/new" method="POST" class="form-inline">
+               <div class="form-group" id="libraryTypeInput">
+                    <input type="text" id="libraryType" name="libraryType" class="form-control input-sm"
+                     style="width:200px;" placeholder="馆藏类型">
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary" onclick="addLibraryType();return false;"
+                    style="width:50px; height:36px; padding: 1px 6px; margin-bottom: 2px;">添加</button>
+                    <span id="msg" style="color:red; font-size:12px;"></span>
+               </div>
+        </form>
+        <br/>
+        @table("libraryTypeTable"){
+        <tr>
+            <th>馆藏类型</th>
+            <th style="width:100px;">操作</th>
+        </tr>
+        }{
+        @for(libraryType <- libraryTypes){
+        <tr>
+            <td class="data">@libraryType.libraryType</td>
+            <td>
+                @form(routes.MetaSetCtrl.deleteMeta(libraryType.id)) {
+                    <div class="btn-group">
+                        <button class="btn btn-primary btn-xs" onclick="setForm(this);return false;">
+                            <i class="fa fa-pencil-square-o" ></i>
+                        </button>
+                        <button type="submit" class="btn btn-danger btn-xs">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </div>
+                }
+            </td>
+            <form id="update@libraryType.id" name="update@libraryType.id" action="/admin/libaryMeta/@libraryType.id/update" method="POST">
+            <td style="display:none">
+                <input type="hidden" name="id-@libraryType.id" value="@libraryType.id"/>
+                <input type="text" name="libraryType-@libraryType.id" id="libraryType-@libraryType.id" value="@libraryType.libraryType"/>
+            </td>
+            <td style="display:none">
+                <input type="button" value="提交" onclick="updateMeta(this, @libraryType.id, '@libraryType.libraryType');return;" class="btn btn-success btn-xs"/>
+                <input type="button" id="cancel" value="取消" class="btn btn-default btn-xs" onclick="cancelForm(this);return false;"/>
+            </td>
+            </form>
+        </tr>
+        }
+        }
+        <p id="updateMsg" class="text-danger" role="alert"></p>
+    </div>
+</div>
+<script>
+$("#navLibraryType").addClass("active");
+$("#navLibraryType").parent().parent().parent().addClass("active").children('ul').collapse('toggle');
+function addLibraryType() {
+    var libraryType = $("#libraryType").val();
+    if(libraryType.replace(/^\s+|\s+$/g,'').length === 0 ) {
+        $("#msg").text("* 不能添加空馆藏类型!");
+        $("#libraryTypeInput").addClass("has-error");
+        return;
+    }
+    $.get("/admin/libaryMeta/" + libraryType + "/check").done(function(data) {
+        if (data === "true") {
+            $("#msg").text("* 馆藏类型不能重名!");
+            $("#libraryTypeInput").addClass("has-error");
+            return;
+        }
+        newForm.submit();
+    });
+}
+function updateMeta(e, id, name) {
+    var libraryType = $("#libraryType-" + id).val();
+    if(name != libraryType) {
+        if(libraryType.replace(/^\s+|\s+$/g,'').length === 0 ) {
+            $("#updateMsg").text("* 馆藏类型不能为空!");
+            $("#libraryType-" + id).addClass("has-error");
+            return;
+        }
+        $.get("/admin/libaryMeta/" + libraryType + "/check").done(function(data) {
+            if (data === "true") {
+                $("#updateMsg").text("* 馆藏类型不能重名!");
+                $("#libraryType-" + id).addClass("has-error");
+                return;
+            }
+            $("#update" + id).submit();
+        });
+    } else {
+        cancelForm(e);
+    }
+}
+function setForm(e) {
+    $(e).parents('tr').children('td[class=data]').hide();
+    $(e).parents('tr').children('td').has('input').show();
+    $(e).parents('td').hide();
+}
+function cancelForm(e) {
+    $("#updateMsg").text("");
+    $(e).parents('tr').children('td[class=data]').show();
+    $(e).parents('tr').children('td').has('input').hide();
+    $(e).parents('tr').children('td').has('button').show();
+}
+</script>
+}

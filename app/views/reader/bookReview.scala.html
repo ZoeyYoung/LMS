@@ -1,0 +1,80 @@
+@(book: Book, bookReview: BookReview)
+@import helper._
+@import bootstrap3._
+@readerMain("写书评") {
+<div class="row">
+    <div class="col-md-8">
+        <dl class="dl-horizontal well">
+            <div>
+                <h4>@if(bookReview.star) {
+                    <i class="fa fa-heart" id="heartBtn"></i>
+                } else {
+                    <i class="fa fa-heart-o" id="heartBtn"></i>
+                } (<span id="heartedTimes">@book.heartedTimes</span>)　@book.bookname</h4>
+            </div><hr/>
+            <dt>ISBN</dt>
+            <dd>@book.isbn</dd>
+            <br/>
+            <dt>馆藏类型</dt>
+            <dd>@book.libraryType.libraryType</dd>
+            <br>
+            <dt>作    者</dt>
+            <dd>@book.author</dd>
+            <br/>
+            <dt>出版社</dt>
+            <dd>@book.publisher</dd>
+        </dl>
+        <form name="reviewForm" role="form" action="/reader/bookReview/save" method="POST">
+            <div id="bookReviewInput" class="form-group">
+                <input id="isbn" type="hidden" name="isbn" value="@book.isbn" />
+                <label for="bookReview" class="sr-only control-label">评论</label>
+                <textarea id="bookReview" rows="4" name="bookReview" class="form-control" placeholder="可以吐嘈200字哟~~" maxlength='400'>@bookReview.review</textarea>
+                <span id="msg" class="help-block"></span>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="saveReview()">保存</button>
+            <button type="button" class="btn btn-default" onclick="window.location='/reader/borrows';">取消</button>
+        </form>
+    </div>
+</div>
+<script>
+$("#navBorrows").addClass("active");
+function contain(str,charset){
+    var i;
+    for(i=0; i<charset.length; i++) {
+        if(str.indexOf(charset.charAt(i))>=0)
+             return true;
+    }
+    return false;
+}
+//判断字符函数
+function checkForm() {
+    var oContain = $("#bookReview").val();
+    if (!oContain) {
+        $("#msg").text("请先填写评论！");
+        return false;
+    } else if(contain(oContain,"^[^#$^*-=+]+$")){
+        $("#msg").text("输入非法，请不要使用\"^[^#$^*-=+]+$\"等非法字符");
+        return false;
+    }
+    return true;
+}
+//检测输入是否非法
+function saveReview() {
+    if (checkForm()) {
+        reviewForm.submit();
+    } else {
+        $("#bookReviewInput").addClass("has-error");
+    }
+}
+$("#heartBtn").on("click", function() {
+    $.post("/reader/bookReview/@book.isbn/heart").done(function(data) {
+        if (data.hearted === "true") {
+            $("#heartBtn").removeClass("fa-heart-o").addClass("fa-heart");
+        } else {
+            $("#heartBtn").removeClass("fa-heart").addClass("fa-heart-o");
+        }
+        $("#heartedTimes").text(data.heartedTimes);
+    });
+});
+</script>
+}

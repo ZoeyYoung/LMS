@@ -1,0 +1,123 @@
+@(points: List[Point], point: Point, totalpoint: Point, epoints: List[Point])
+@import bootstrap3._
+@readerMain("我的积分") {
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">积分概况</div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <p class="list-group-item-text">可兑换积分 ( @if(point!=null){@point.point}else{0} ) 账户总积分 ( @if(totalpoint!=null){@totalpoint.point}else{0} )</p>
+            </div>
+        </div>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="active"><a href="#points" role="tab" data-toggle="tab">积分明细</a></li>
+          <li><a href="#records" role="tab" data-toggle="tab">兑换记录</a></li>
+          <li><a href="#help" role="tab" data-toggle="tab">积分规则</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="points">
+                <br>
+                <div class="table-responsive">
+                    <table id="pointTable" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>积分日期</th>
+                                <th>来源</th>
+                                <th>可兑换积分</th>
+                                <th>有效期</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @for(point <- points){
+                            <tr>
+                                <td>@point.createDate</td>
+                                <td>@point.source</td>
+                                <td>@point.point</td>
+                                <td>@point.overdueDate</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="records">
+                <div class="table-responsive">
+                    <br>
+                    <table id="recodesTable" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>兑换日期</th>
+                                <th>兑换物品</th>
+                                <th>消费积分</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for(point <- epoints){
+                            <tr>
+                                <td>@point.createDate</td>
+                                <td>@point.source</td>
+                                <td>@point.point</td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="help">
+                <br>
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>类型</th>
+                      <th>来源</th>
+                      <th>积分</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="3">借阅积分</td>
+                      <td>借阅</td>
+                      <td>+1</td>
+                    </tr>
+                    <tr>
+                      <td>按时归还</td>
+                      <td>+1</td>
+                    </tr>
+                    <tr>
+                      <td>逾期归还</td>
+                      <td>-1/日</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="2">奖惩积分</td>
+                      <td>服务积分</td>
+                      <td>1/次</td>
+                    </tr>
+                    <tr>
+                      <td>图书污损</td>
+                      <td>-1</td>
+                    </tr>
+                    <tr>
+                      <td>捐赠积分（用于积分兑换）</td>
+                      <td>捐赠</td>
+                      <td>2/本</td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$("#navPoints").addClass("active");
+$("#navPoints").parent().parent().parent().addClass("active").children('ul').collapse('toggle');
+$("#pointTable").dataTable({
+    "searching": false,
+    "info": false,
+    "order": [[ 0, "desc" ]],
+    "language": language
+});
+</script>
+}

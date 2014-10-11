@@ -1,0 +1,256 @@
+@(libraryTypes: List[LibraryType], bookForm: Form[views.form.BookForm])
+@import helper._
+@import bootstrap3._
+@adminMain("图书入库") {
+<style type="text/css">
+.form-horizontal .form-group {
+    margin: 0 15px;
+}
+.form-horizontal .checkbox {
+    padding: 0 15px;
+}
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <div class="well">
+        <p id="commonMsg" class="bg-danger" role="alert"></p>
+        <p id="successMsg" class="bg-success" role="alert"></p>
+        <form action="/admin/books/newBook" method="POST" class="form-horizontal">
+        <div class="row">
+            <div class="col-md-6">
+                @text(bookForm("isbn"), label = "ISBN", placeholder = "ISBN", maxlength = "13" ,help ="")
+                <div class="col-xs-offset-1 col-sm-offset-3 col-md-offset-1 col-lg-offset-3">
+                    <label>
+                        <button type="button" class="btn btn-xs" id="networking">联网检索录入书刊信息</button>
+                        <span id="netMsg" class="text-warning">没有获取到此书刊信息，请手动输入</span>
+                    </label>
+                </div>
+                @text(bookForm("bookname"), label = "书刊名称*",placeholder = "书刊名称",  help = "")
+                @text(bookForm("inputCode"), label ="输入码", placeholder = "输入码", help = "")
+                @text(bookForm("author"),label = "作者", placeholder = "作者", help = "")
+                <div class="form-group">
+                    <label class="col-sm-2 control-label hidden-md" for="libraryType">馆藏类型*</label>
+                    <div class="col-sm-10 col-md-12 col-lg-10">
+                        <select class="form-control input-sm" id="libraryType" name="libraryType">
+                            <option class="blank" value="-1" selected="selected">--请选择馆藏类型--</option>
+                            @for(libraryType <- libraryTypes){
+                                <option value="@libraryType.id">@libraryType.libraryType</option>
+                            }
+                        </select>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+                @text(bookForm("categoryCode"), label = "分类号", placeholder ="分类号", help = "")
+                @text(bookForm("category"), label = "分类名称", placeholder= "分类名称", help = "")
+                @text(bookForm("publisher"), label = "出版单位",placeholder = "出版单位", help = "")
+                @text(bookForm("publishAddr"), label= "出版地", placeholder = "出版地", help = "")
+                @text(bookForm("publishDate"), label= "出版日期", placeholder = "出版日期", help = "")
+                @text(bookForm("price"), label = "书刊定价",placeholder = "书刊定价", help = "")
+            </div>
+            <div class="col-md-6">
+                @text(bookForm("subjectTerm"), label = "主题词",placeholder = "主题词", help = "")
+                @text(bookForm("subseriesName"), label = "丛编名",placeholder = "丛编名", help = "")
+                @text(bookForm("publishTimes"), label = "出版次数",placeholder = "出版次数", help = "")
+                @text(bookForm("bookLanguage"), label = "书刊语言",placeholder = "书刊语言", help = "")
+                @text(bookForm("entiretyShape"), label = "载体形态",placeholder = "载体形态", help = "")
+                @text(bookForm("bookAccessory"), label = "书刊附件",placeholder = "书刊附件", help = "")
+                @text(bookForm("CNID"), label = "CN刊号",placeholder = "CN刊号", help = "")
+                @text(bookForm("publishPeriod"), label = "出版周期",placeholder = "出版周期", help = "")
+                @text(bookForm("hostUnit"), label = "主办单位",placeholder = "主办单位", help = "")
+                <div class="form-group">
+                <div class="col-sm-offset-2 col-md-offset-0 col-lg-offset-2 col-sm-8">
+                <div class="btn-group">
+                <button type="button" id="submitBook" class="btn btn-primary" >添加副本书刊</button>
+                <button type="button" id="updateBook" class="btn btn-info">更新书刊信息</button>
+                </div>
+                </div>
+                </div>
+            </div>
+        </div>
+        </form>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+       @table("booksTable"){
+            <tr>
+                <th>书刊条码(自编号)</th>
+                <th>状态</th>
+                <th>索引号</th>
+                <th>价格</th>
+                <th>登记日期</th>
+                <th>操作员</th>
+            </tr>
+        }{
+        }
+    </div>
+</div>
+<script>
+$("#navBookForm").addClass("active");
+$("#navBookForm").parent().parent().parent().addClass("active").children('ul').collapse('toggle');
+var isbnMsg = $("#commonMsg");
+isbnMsg.hide();
+$("#updateBook").hide();
+$("#successMsg").hide();
+$("#netMsg").hide();
+$("#isbn").change(function() {
+    isbnMsg.hide();
+    $("#netMsg").hide();
+    $("#updateBook").hide();
+    $("#updateBook").hide();
+    $("#bookname").val("");
+    $("#inputCode").val("");
+    $("#author").val("");
+    $("#libraryType").val("");
+    $("#categoryCode").val("");
+    $("#category").val("");
+    $("#publisher").val("");
+    $("#publishAddr").val("");
+    $("#price").val("");
+    resetTable([]);
+});
+$("form").change(function() {
+    isbnMsg.hide();
+    $("#successMsg").hide();
+    $(".form-group").removeClass("has-error");
+});
+$("#isbn").on('blur', function() {
+    var isbn = $("#isbn").val();
+    if (!isbn) {
+        return;
+    }
+    if( isbn.replace(/^\s+|\s+$/g,'').length == 0 || !(/^\d{13}$/).test(isbn) ) {
+        isbnMsg.text("请正确输入书刊ISBN码");
+        isbnMsg.show();
+        return;
+    }
+    isbnMsg.text("");
+    $.getJSON("/bookCounterparts/" + isbn).done(function(data) {
+        if (data.counterparts) {
+            resetTable(data.counterparts);
+            var book = data.book;
+            $("#bookname").val(book.bookname);
+            $("#inputCode").val(book.inputCode);
+            $("#author").val(book.author);
+            $("#libraryType").val(book.libraryType.id);
+            if (!$("#libraryType").val()) {
+                $("#libraryType").val(-1);
+            }
+            $("#categoryCode").val(book.categoryCode);
+            $("#category").val(book.category);
+            $("#publisher").val(book.publisher);
+            $("#publishAddr").val(book.publishAddr);
+            $("#price").val(book.price);
+            $("#updateBook").show();
+        } else {
+            if (!$("#libraryType").val()) {
+                $("#libraryType").val(-1);
+            }
+        }
+    });
+});
+$("#networking").on("click", function() {
+    var isbn = $("#isbn").val();
+    $.getJSON("/ISBNService/" + isbn).done(function(data) {
+        if (data.bookName) {
+            $("#bookname").val(data.bookName);
+            $("#inputCode").val(data.inputCode);
+            $("#author").val(data.author);
+            $("#categoryCode").val(data.categoryID);
+            $("#category").val(data.category);
+            $("#publisher").val(data.publisher);
+            $("#publishAddr").val(data.publishAddr);
+            $("#price").val(data.price);
+        }
+    }).error(function() {
+        $("#netMsg").show();
+    });
+});
+var checkBookForm = function() {
+    var hasError = false;
+    var isbn = $("#isbn").val();
+    var bookname = $("#bookname").val();
+    //对ISBN号和书名进行验证，没有写清楚
+    if(isbn.replace(/^\s+|\s+$/g,'').length == 0 || !(/^\d{13}$/).test(isbn)) {
+        $("#isbn").parents(".form-group").addClass("has-error");
+        hasError = true;
+    }
+    if (bookname.replace(/^\s+|\s+$/g,'').length == 0) {
+        $("#bookname").parents(".form-group").addClass("has-error");
+        hasError = true;
+    }
+    var libraryType = $("#libraryType").val();
+    if (!libraryType || libraryType == -1) {
+        $("#libraryType").parents(".form-group").addClass("has-error");
+        hasError = true;
+    }
+    if (hasError) {
+        isbnMsg.text("请正确输入书刊信息");
+        isbnMsg.show();
+    }
+    return hasError;
+};
+$("#updateBook").on("click", function() {
+    if (checkBookForm()) {
+        return;
+    }
+    $.post("/admin/books/updateBook", {
+        "isbn": $("#isbn").val(),
+        "bookname": $("#bookname").val(),
+        "inputCode": $("#inputCode").val(),
+        "author": $("#author").val(),
+        "libraryType": $("#libraryType").val(),
+        "categoryCode": $("#categoryCode").val(),
+        "category": $("#category").val(),
+        "publisher": $("#publisher").val(),
+        "publishAddr": $("#publishAddr").val(),
+        "price": $("#price").val()
+    }).done(function(data) {
+        resetTable(data);
+        $("#successMsg").text("书刊资料更新成功");
+        $("#successMsg").show();
+    });
+});
+var resetTable = function(data) {
+    $('#booksTable').dataTable({
+        destroy: true,
+        data: data,
+        columns: [
+            { "data": "counterpartCode" },
+            { "data": "status" },
+            { "data": "categoryCode" },
+            { "data": "price" },
+            { "data": "createDate" },
+            { "data": "operator" }
+        ],
+        paging: false,
+        ordering: false,
+        searching: false,
+        info: false,
+        language: language
+    });
+};
+
+$("#submitBook").on('click', function() {
+    if (checkBookForm()) {
+        return;
+    }
+    $.post("/admin/books/newBook", {
+        "isbn": $("#isbn").val(),
+        "bookname": $("#bookname").val(),
+        "inputCode": $("#inputCode").val(),
+        "author": $("#author").val(),
+        "libraryType": $("#libraryType").val(),
+        "categoryCode": $("#categoryCode").val(),
+        "category": $("#category").val(),
+        "publisher": $("#publisher").val(),
+        "publishAddr": $("#publishAddr").val(),
+        "price": $("#price").val()
+    }).done(function(data) {
+        resetTable(data);
+        $("#updateBook").show();
+    });
+});
+</script>
+}

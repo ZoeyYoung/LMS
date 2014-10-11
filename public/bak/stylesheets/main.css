@@ -1,0 +1,323 @@
+/*!
+ * Start Bootstrap - SB Admin 2 Bootstrap Admin Theme (http://startbootstrap.com)
+ * Code licensed under the Apache License v2.0.
+ * For details, see http://www.apache.org/licenses/LICENSE-2.0.
+ */
+body {
+    font-size: 12px;
+    font-family: arial, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', '宋体', \5b8b\4f53, Tahoma, Arial, Helvetica, STHeiti;
+}
+#wrapper {
+    width: 100%;
+    background-color: rgb(0, 140, 186);
+}
+.navbar-text {
+    padding-top: 5px;
+}
+@media (min-width: 768px) {
+    .container {
+        width: 650px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container {
+        width: 820px;
+    }
+}
+
+@media (min-width: 1200px){
+    .container {
+        width: 1020px;
+    }
+}
+
+#page-wrapper {
+    padding: 0 10px;
+    min-height: 568px;
+    background-color: #fff;
+    min-height: 568px;
+}
+
+.container {
+    margin-left: 0;
+}
+
+@media (min-width :768px) {
+    #page-wrapper {
+        position: inherit;
+        margin: 0 0 0 150px;
+        padding: 0 15px;
+        border-left: 1px solid #e7e7e7;
+    }
+}
+
+.navbar-top-links li {
+    display: inline-block;
+}
+
+.navbar-top-links li:last-child {
+    margin-right: 15px;
+}
+
+.navbar-top-links li a {
+    padding: 15px;
+    min-height: 50px;
+}
+
+.navbar-top-links .dropdown-menu li {
+    display: block;
+}
+
+.navbar-top-links .dropdown-menu li:last-child {
+    margin-right: 0;
+}
+
+.navbar-top-links .dropdown-menu li a {
+    padding: 3px 20px;
+    min-height: 0;
+}
+
+.navbar-top-links .dropdown-menu li a div {
+    white-space: normal;
+}
+
+.navbar-top-links .dropdown-messages,.navbar-top-links .dropdown-tasks,.navbar-top-links .dropdown-alerts
+    {
+    width: 310px;
+    min-width: 0;
+}
+
+.navbar-top-links .dropdown-messages {
+    margin-left: 5px;
+}
+
+.navbar-top-links .dropdown-tasks {
+    margin-left: -59px;
+}
+
+.navbar-top-links .dropdown-alerts {
+    margin-left: -123px;
+}
+
+.navbar-top-links .dropdown-user {
+    right: 0;
+    left: auto;
+}
+
+.sidebar .sidebar-nav.navbar-collapse {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.sidebar .sidebar-search {
+    padding: 15px;
+}
+
+.sidebar ul li {
+    border-bottom: 1px solid #e7e7e7;
+}
+
+.sidebar ul li a.active {
+    background-color: rgb(0, 82, 110);
+}
+
+.sidebar .arrow {
+    float: right;
+}
+
+.sidebar .fa.arrow:before {
+    content: "\f104";
+}
+
+.sidebar .active>a>.fa.arrow:before {
+    content: "\f107";
+}
+
+.sidebar .nav-second-level li,.sidebar .nav-third-level li {
+    border-bottom: 0 !important;
+}
+
+.sidebar .nav-second-level li a {
+    padding-left: 37px;
+}
+
+.sidebar .nav-third-level li a {
+    padding-left: 52px;
+}
+
+.navbar-inverse .sidebar-nav a {
+    color: white;
+}
+
+.navbar-inverse .nav>li>a:hover,.navbar-inverse .nav>li>a:focus {
+    text-decoration: none;
+    background-color: rgb(0, 82, 110);
+}
+
+@media (min-width :768px) {
+    .sidebar {
+        z-index: 1;
+        position: absolute;
+        width: 150px;
+        margin-top: 51px;
+    }
+    .navbar-top-links .dropdown-messages,.navbar-top-links .dropdown-tasks,.navbar-top-links .dropdown-alerts
+        {
+        margin-left: auto;
+    }
+}
+
+.btn-outline {
+    color: inherit;
+    background-color: transparent;
+    transition: all .5s;
+}
+
+.btn-primary.btn-outline {
+    color: #428bca;
+}
+
+.btn-success.btn-outline {
+    color: #5cb85c;
+}
+
+.btn-info.btn-outline {
+    color: #5bc0de;
+}
+
+.btn-warning.btn-outline {
+    color: #f0ad4e;
+}
+
+.btn-danger.btn-outline {
+    color: #d9534f;
+}
+
+.btn-primary.btn-outline:hover,.btn-success.btn-outline:hover,.btn-info.btn-outline:hover,.btn-warning.btn-outline:hover,.btn-danger.btn-outline:hover
+    {
+    color: #fff;
+}
+
+.panel .slidedown .glyphicon,.chat .glyphicon {
+    margin-right: 5px;
+}
+
+.login-panel {
+    margin-top: 25%;
+}
+
+table {
+    width: 98%;
+    font-size: 12px;
+}
+
+th { white-space: nowrap; }
+
+tfoot input {
+    width: 100%;
+    padding: 3px;
+    box-sizing: border-box;
+}
+
+.show-grid [class^=col-] {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 1px solid #ddd;
+    background-color: #eee !important;
+}
+
+.show-grid {
+    margin: 12px 0;
+}
+
+.huge {
+    font-size: 40px;
+}
+
+.panel-green {
+    border-color: #5cb85c;
+}
+
+.panel-green .panel-heading {
+    border-color: #5cb85c;
+    color: #fff;
+    background-color: #5cb85c;
+}
+
+.panel-green a {
+    color: #5cb85c;
+}
+
+.panel-green a:hover {
+    color: #3d8b3d;
+}
+
+.panel-red {
+    border-color: #d9534f;
+}
+
+.panel-red .panel-heading {
+    border-color: #d9534f;
+    color: #fff;
+    background-color: #d9534f;
+}
+
+.panel-red a {
+    color: #d9534f;
+}
+
+.panel-red a:hover {
+    color: #b52b27;
+}
+
+.panel-yellow {
+    border-color: #f0ad4e;
+}
+
+.panel-yellow .panel-heading {
+    border-color: #f0ad4e;
+    color: #fff;
+    background-color: #f0ad4e;
+}
+
+.panel-yellow a {
+    color: #f0ad4e;
+}
+
+.panel-yellow a:hover {
+    color: #df8a13;
+}
+
+#readerCatesTable button,#readerCatesTable input[type=submit],#readerCatesTable input[type=button],#libraryTypeTable button,#libraryTypeTable input[type=submit],#libraryTypeTable input[type=button]
+    {
+    padding: 0 6px;
+}
+
+.bg-warning,.bg-danger,.bg-info,.bg-success {
+    padding: 12px;
+}
+
+.review-callout {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+    border-left-color: #5bc0de;
+}
+
+.review-text {
+    margin: 30px 30px 10px 50px;
+}
+
+.fa-heart {
+    color: red;
+}
+
+.aclick {
+    width:60px;
+    height:36px;
+    padding: 6px 6px;
+    margin-bottom: 3px;
+}

@@ -1,0 +1,37 @@
+@(reader: Reader)
+@import bootstrap3._
+@readerMain("我的资料") {
+<div class="row">
+    <div class="col-md-6">
+        <dl class="dl-horizontal well">
+            <dt>读者名</dt>
+            <dd>@reader.readerName</dd>
+            <br>
+            <dt>读者编码</dt>
+            <dd>@reader.readerCode</dd>
+            <br>
+            <dt>证卡编号</dt>
+            <dd>@reader.cardID</dd>
+            <br>
+            <dt>读者类别</dt>
+            <dd>@reader.readerCate.readerCateName</dd>
+            <br>
+            <dt>性别</dt>
+            <dd>@if(reader.sex != null){ @reader.sex.gender() }</dd>
+            <br>
+            <dt>工作单位</dt>
+            <dd>@reader.corpName</dd>
+            <br>
+            <dt>部门</dt>
+            <dd>@reader.deptName</dd>
+            <br>
+            <dt>Email</dt>
+            <dd>@reader.email</dd>
+         </dl>
+    </div>
+</div>
+<script>
+$("#navReaderInfo").addClass("active");
+$("#navReaderInfo").parent().parent().parent().addClass("active").children('ul').collapse('toggle');
+</script>
+}

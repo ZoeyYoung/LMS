@@ -1,0 +1,28 @@
+@(loginForm: Form[views.form.AdminLoginForm], message: String)
+@main("管理员登录") {
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/login.css")">
+<div id="container">
+    <form action="/admin/login" method="POST">
+        <div class="login">管理员登录</div>
+        <div class="username-text">管理员帐号:</div>
+        <div class="password-text">密码:</div>
+        <div class="username-field">
+            <input type="text" id="adminName" name="adminName" value="" />
+            @if(loginForm("adminName").hasErrors) {
+            <p id="errorMsg" class="text-danger">@{loginForm("adminName").error.map { error => error.message }}</p>
+            }
+        </div>
+        <div class="password-field">
+            <input type="password" name="adminPassword" value="" />
+            @if(loginForm("adminPassword").hasErrors) {
+            <p id="errorMsg" class="text-danger">@{loginForm("adminPassword").error.map { error => error.message }}</p>
+            }
+        </div>
+        <p class="text-danger" style="padding: 20px 0 20px 40px; float: left;">@if(message) { @message }</p>
+        <input type="submit" name="submit" value="登录" />
+    </form>
+</div>
+<script>
+
+</script>
+}

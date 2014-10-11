@@ -1,0 +1,115 @@
+@(orders: List[views.table.OrderTable], ordersCount: List[views.table.OrderTable])
+@import helper._
+@import bootstrap3._
+@adminMain("图书购买"){
+<div class="row">
+    <div class="col-md-12">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="active"><a href="#order" role="tab" data-toggle="tab">需求列表</a></li>
+          <li><a href="#orderCount" role="tab" data-toggle="tab">需求汇总</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane fade in active" id="order">
+                <br/>
+            @table("orderTable"){
+                <tr>
+                    <th>ISBN</th>
+                    <th>书名</th>
+                    <th>类别</th>
+                    <th>作者</th>
+                    <th>译者</th>
+                    <th>出版社</th>
+                    <th>原价</th>
+                    <th>购买理由</th>
+                    <th>状态：<select id="statusSel"><option value="">全部</option></select></th>
+                    <th>提出者</th>
+                    <th>操作</th>
+                </tr>
+            }{
+                @for(order <- orders){
+                <tr data-column="@order.isbn">
+                    <td>@order.isbn</td>
+                    <td>@order.bookname</td>
+                    <td>@order.category</td>
+                    <td>@order.author</td>
+                    <td>@order.translator</td>
+                    <td>@order.publisher</td>
+                    <td>@order.price</td>
+                    <td><a href="#" tabindex="0" class="popover-btn btn btn-xs btn-info" data-toggle="tooltip" data-placement="bottom" data-content="@order.reason" title="购买理由">查看</a>
+                    </td>
+                    <td>@order.status</td>
+                    <td>@order.readerName</td>
+                    <td>
+                    @if(order.status == "未购入") {
+                        <button type="button" class="btn btn-danger btn-xs not-buy-btn">暂不购入</button>
+                    } else {
+                        @if(order.status == "暂不购入") {
+                        <button type="button" class="btn btn-info btn-xs un-buy-btn">恢复</button>
+                        }
+                    }
+                    </td>
+                </tr>
+                }
+            }
+            </div>
+            <div class="tab-pane fade" id="orderCount">
+                <br/>
+                @table("orderCountTable"){
+                    <tr>
+                        <th>ISBN</th>
+                        <th>书名</th>
+                        <th>提出数</th>
+                        <th>状态</th>
+                    </tr>
+                }{
+                    @for(order <- ordersCount){
+                    <tr data-column="@order.isbn">
+                        <td>@order.isbn</td>
+                        <td>@order.bookname</td>
+                        <td>@order.orderCount</td>
+                        <td>@order.status</td>
+                    </tr>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$("#navOrders").addClass("active");
+$("#navOrders").parent().parent().parent().addClass("active").children('ul').collapse('toggle');
+var orderTable = $("#orderTable").DataTable({
+    info: false,
+    language: language,
+    scrollX: true
+});
+$("#orderCountTable").dataTable({
+    language: language,
+    "order": [[ 2, "desc" ]],
+});
+$(".popover-btn").popover({
+    trigger: 'hover'
+});
+$(".not-buy-btn").on("click", function() {
+    var isbn = $(this).parents('tr').attr('data-column');
+    $.get("/admin/orders/nobuy/" + isbn).done(function(data) {
+        window.location = "/admin/orders";
+    });
+});
+$(".un-buy-btn").on("click", function() {
+    var isbn = $(this).parents('tr').attr('data-column');
+    $.get("/admin/orders/unbuy/" + isbn).done(function(data) {
+        window.location = "/admin/orders";
+    });
+});
+var select = $("#statusSel").on('change', function() {
+    var val = $(this).val();
+    orderTable.column(8).search(val ? '^'+ $(this).val() + '$' : val, true, false).draw();
+});
+orderTable.column(8).data().unique().sort().each(function(d, j) {
+    select.append('<option value="'+d+'">'+d+'</option>')
+});
+</script>
+}

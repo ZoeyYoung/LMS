@@ -1,0 +1,64 @@
+@(book: Book, bookReviews: List[BookReview], counterparts: List[views.table.CounterpartTable])
+@import helper._
+@import bootstrap3._
+@readerMain("书刊信息") {
+<div class="row">
+    <div class="col-md-8">
+        <h4>《@book.bookname》<small><span> —— 赞(@book.heartedTimes)</span></small></h4>
+        <dl class="dl-horizontal well">
+            <dt>ISBN</dt>
+            <dd>@book.isbn</dd>
+            <br/>
+            <dt>馆藏类型</dt>
+            <dd>@book.libraryType.libraryType</dd>
+            <br>
+            <dt>作    者</dt>
+            <dd>@book.author</dd>
+            <br/>
+            <dt>出版社</dt>
+            <dd>@book.publisher</dd>
+        </dl>
+        @table("booksTable"){
+            <tr>
+                <th>书刊条码(自编号)</th>
+                <th>状态</th>
+                <th>索引号</th>
+                <th>价格</th>
+                <th>登记日期</th>
+                <th>操作员</th>
+            </tr>
+        }{
+            @for(counterpart <- counterparts){
+            <tr>
+                <td>@counterpart.counterpartCode</td>
+                <td>@counterpart.status</td>
+                <td>@counterpart.categoryCode</td>
+                <td>@counterpart.price</td>
+                <td>@counterpart.createDate</td>
+                <td>@counterpart.operator</td>
+            </tr>
+            }
+        }
+        @if(bookReviews.size() > 0) {
+        @for(bookReview <- bookReviews) {
+        <div class="review-callout">
+            <h4 class="list-group-item-heading">
+            @if(bookReview.star) {
+                <i class="fa fa-heart"></i>
+            } else {
+                <i class="fa fa-heart-o"></i>
+            }　@bookReview.reader.readerName <small>@bookReview.createDate</small>
+            </h4>
+            <p class="list-group-item-text review-text">@bookReview.review</p>
+        </div>
+        }
+        }else{
+        <div class="review-callout">
+            <p class="list-group-item-text review-text">还没有书评</p>
+        </div>
+        }
+    </div>
+</div>
+<script>
+</script>
+}

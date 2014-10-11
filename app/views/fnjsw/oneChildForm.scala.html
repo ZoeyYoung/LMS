@@ -1,0 +1,403 @@
+@(orderForm: Form[views.form.OrderForm])
+@import bootstrap3._
+@fnjswMain("我想读 . . .") {
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <form method="POST" action="new">
+            <fieldset>
+              <legend>育龄妇女基本信息(*必填)</legend>
+              <table class="table table-condensed">
+                <tbody>
+                  <tr>
+                    <td class="label">
+                      <label for="fName">姓名：</label>
+                    </td>
+                    <td>
+                      <input type="text" id="fName" name="fName" size="16" />
+                      <span class="require">*</span>
+                    </td>
+                    <td class="label">
+                      <label for="fIdCardNo">身份证号：</label>
+                    </td>
+                    <td>
+                      <input type="text" id="fIdCardNo" name="fIdCardNo" size="16" />
+                      <span class="require">*</span>
+                    </td>
+                    <td class="label">
+                      <label for="fPhone">联系电话：</label>
+                    </td>
+                    <td>
+                      <input type="text" id="fPhone" name="fPhone" size="16" />
+                      <span class="require">*</span>
+                    </td>
+                    <td class="label">
+                      <label for="marriageIdNo">婚育证明号码：</label>
+                    </td>
+                    <td>
+                      <input type="text" id="marriageIdNo" name="marriageIdNo" size="16" />
+                      <span class="require">*</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="label">
+                      <label for="fPermanentAddress">户籍地址：</label>
+                    </td>
+                    <td colspan="8">
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 省
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 市
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 县
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 镇
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 村
+                      <label for="fpHouseNo">门牌号</label>
+                      <input type="text" id="fpHouseNo" name="fpHouseNo" size="8" />
+                      <span class="require">*</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="label">
+                      <label for="fAddress">现居住地址：</label>
+                    </td>
+                    <td colspan="8">
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 省
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 市
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 县
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 镇
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 村
+                      <label for="faHouseNo">门牌号</label>
+                      <input type="text" id="faHouseNo" name="faHouseNo" size="8" />
+                      <span class="require">*</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="label">
+                      <label for="fCompanyName">工作单位名称：</label>
+                    </td>
+                    <td colspan="8">
+                      <input type="text" id="fCompanyName" name="fCompanyName" size="100" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="label">
+                      <label for="fCompanyAddr">工作单位地址：</label>
+                    </td>
+                    <td colspan="8">
+                      <input type="text" id="fCompanyAddr" name="fCompanyAddr" size="100" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </fieldset>
+            <fieldset>
+              <legend>丈夫信息(*必填)</legend>
+              <table class="table table-condensed">
+                <tbody>
+                  <tr>
+                    <td class="label">
+                      <label for="mName">姓名：</label>
+                    </td>
+                    <td>
+                      <input type="text" id="mName" name="mName" size="16" />
+                      <span class="require">*</span>
+                    </td>
+                    <td class="label">
+                      <label for="mIdCardNo">身份证号：</label>
+                    </td>
+                    <td>
+                      <input type="text" id="mIdCardNo" name="mIdCardNo" size="16" />
+                      <span class="require">*</span>
+                    </td>
+                    <td class="label">
+                      <label for="mPhone">联系电话：</label>
+                    </td>
+                    <td>
+                      <input type="text" id="mPhone" name="mPhone" size="16" />
+                      <span class="require">*</span>
+                    </td>
+                    <td width="280">&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td class="label">
+                      <label for="mPermanentAddress">户籍地址：</label>
+                    </td>
+                    <td colspan="8">
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 省
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 市
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 县
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 镇
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 村
+                      <label for="mpHouseNo">门牌号</label>
+                      <input type="text" id="mpHouseNo" name="mpHouseNo" size="8" />
+                      <span class="require">*</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="label">
+                      <label for="mAddress">现居住地址：</label>
+                    </td>
+                    <td colspan="8">
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 省
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 市
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 县
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 镇
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 村
+                      <label for="maHouseNo">门牌号</label>
+                      <input type="text" id="maHouseNo" name="maHouseNo" size="8" />
+                      <span class="require">*</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="label">
+                      <label for="mCompanyName">工作单位名称：</label>
+                    </td>
+                    <td colspan="8">
+                      <input type="text" id="mCompanyName" name="mCompanyName" size="16" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="label">
+                      <label for="mCompanyAddr">工作单位地址：</label>
+                    </td>
+                    <td colspan="8">
+                      <input type="text" id="mCompanyAddr" name="mCompanyAddr" size="16" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </fieldset>
+            <fieldset>
+              <legend>婚育情况(*必填)</legend>
+              <table class="table table-condensed">
+                <tbody>
+                  <tr>
+                    <td class="label">
+                      <label for="maritalStatus">婚姻状况：</label>
+                    </td>
+                    <td>
+                      <select id="maritalStatus" name="maritalStatus">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">已婚</option>
+                        <option value="2">未婚</option>
+                      </select>
+                    </td>
+                    <td class="label">
+                      <label for="marriageNo">结婚证号：</label>
+                    </td>
+                    <td>
+                      <input type="text" id="marriageNo" name="marriageNo" size="16"/>
+                    </td>
+                    <td class="label">
+                      <label for="marriageDate">结婚时间：</label>
+                    </td>
+                    <td>
+                      <input type="text" id="marriageDate" name="marriageDate" size="16">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="label">
+                      <label for="hasChild">生育子女状况：</label>
+                    </td>
+                    <td>
+                      <select id="hasChild" name="hasChild">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">有</option>
+                        <option value="2">无</option>
+                      </select>
+                    </td>
+                    <td class="label">
+                      <label for="isAdopted">是否领养：</div>
+                    </td>
+                    <td>
+                      <select id="isAdopted" name="isAdopted">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">是</option>
+                        <option value="2">否</option>
+                      </select>
+                    </td>
+                    <td class="label">
+                      <label for="residenceNo">居住证号：</label>
+                    </td>
+                    <td>
+                      <input type="text" id="residenceNo" name="residenceNo" size="16" />
+                    </td>
+                    <td class="label">
+                      <label for="getResidenceDate">领取居住证时间：</label>
+                    </td>
+                    <td>
+                      <input type="text" id="getResidenceDate" name="getResidenceDate" size="16" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </fieldset>
+            <fieldset>
+              <legend>办证情况</legend>
+              <table class="table table-condensed">
+                <tbody>
+                  <tr>
+                    <td class="label">
+                      <label for="registrationAddr">办证地点：</label>
+                    </td>
+                    <td>
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 镇
+                      <select id="__xb" name="xb">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                      </select> 村
+                    </td>
+                    <td class="label">
+                      <label for="serviceNo">服务证号：</label>
+                    </td>
+                    <td>
+                      <input type="text" id="serviceNo" name="serviceNo" size="16" />
+                      <span class="require">*</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="label">
+                      <label for="registrationDate">办证时间：</label>
+                    </td>
+                    <td>
+                      <input type="text" id="registrationDate" name="registrationDate" size="16">
+                    </td>
+                    <td class="label">
+                      <label for="operator">经办人：</label>
+                    </td>
+                    <td>
+                      <input type="text" id="operator" name="operator" size="16" />
+                      <span class="require">*</span>
+                    </td>
+                    <td class="label">
+                      <label for="opPhone">联系电话：</label>
+                    </td>
+                    <td>
+                      <input type="text" id="opPhone" name="opPhone" size="16" />
+                      <span class="require">*</span>
+                    </td>
+                    <td class="label">
+                      <label for="status">状态：</div>
+                    </td>
+                    <td>
+                      <select id="status" name="status">
+                        <option value="-1" selected="">-----请选择-----</option>
+                        <option value="1">正常</option>
+                        <option value="2">注销</option>
+                      </select>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </fieldset>
+            <fieldset>
+              <table class="table table-condensed">
+                <tr>
+                  <td class="label"><label for="">妊娠：</label></td>
+                  <td><input type="text" /></td>
+                  <td class="label"><label for="">计生证件扫描：</label></td>
+                  <td><input type="file" /></td>
+                  <td class="label"><label for="">准生证扫描：</label></td>
+                  <td><input type="file" /></td>
+                </tr>
+                <tr>
+                  <td class="label"><label for="remark">备注：</label></td>
+                  <td colspan="5"><textarea rol="4" col="100"></textarea></td>
+                </tr>
+              </table>
+            </fieldset>
+            <div>
+              <input type="submit" size="16" name="Submit" value="确　定">
+              <input type="reset" size="16" name="Reset" value="重　置">
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+$("#navOrderForm").addClass("active");
+$("#navOrderForm").parent().parent().parent().addClass("active").children('ul').collapse('toggle');
+$("#commonMsg").hide();
+</script>
+}

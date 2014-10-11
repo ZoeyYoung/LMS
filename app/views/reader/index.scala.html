@@ -1,0 +1,139 @@
+@(messages: List[views.table.MessageTable], books: List[Book], infos: List[Information])
+@readerMain("欢迎使用FNST图书馆系统") {
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 hidden-xs hidden-sm">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3"><i class="fa fa-book fa-4x"></i></div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">馆藏</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/reader/books">
+                            <div class="panel-footer">
+                                <span class="pull-left">我要找书</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 hidden-xs hidden-sm">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3"><i class="fa fa-tasks fa-4x"></i></div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">在读</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/reader/borrows">
+                            <div class="panel-footer">
+                                <span class="pull-left">在读的书-写书评-续借</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 hidden-xs hidden-sm">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3"><i class="fa fa-shopping-cart fa-4x"></i></div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">读过</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/reader/borrows/history">
+                            <div class="panel-footer">
+                                <span class="pull-left">读过的书-看书评</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 hidden-xs hidden-sm">
+                    <div class="panel panel-red">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3"><i class="fa fa-comments fa-4x"></i></div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge">想读</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/reader/orders/newOrder">
+                            <div class="panel-footer">
+                                <span class="pull-left">填写购书单</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-red">
+                        <div class="panel-heading">点赞榜</div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            @for(book <- books){
+                            <div class="list-group">
+                              <div href="#" class="list-group-item">
+                                <h3 class="list-group-item-heading text-info">
+                                    <a href="/reader/books/@book.isbn/info">@book.bookname</a>
+                                </h3>
+                                <p class="list-group-item-text">借阅数 ( @book.borrowedTimes ) 点赞数 ( @book.heartedTimes )</p>
+                              </div>
+                            </div>
+                            }
+                        </div>
+                        <!-- .panel-body -->
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">消息提醒</div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            @for(info <- infos){
+                            <div class="list-group">
+                              <div href="#" class="list-group-item">
+                                <h3 class="list-group-item-heading text-primary">系统消息 <small> @info.createDate </small></h3>
+                                <p class="list-group-item-text"><a href="/reader/information/@info.id">@info.informationTitle</a></p>
+                              </div>
+                            </div>
+                            }
+                            @for(message <- messages){
+                            <div class="list-group">
+                              <div href="#" class="list-group-item">
+                                <h3 class="list-group-item-heading text-@message.mtype">
+                                @if(message.mtype=="danger"){逾期提醒}
+                                @if(message.mtype=="warning"){还书提醒}
+                                @if(message.mtype=="success"){新书速递}
+                                </h3>
+                                <p class="list-group-item-text">@message.message</p>
+                              </div>
+                            </div>
+                            }
+                        </div>
+                        <!-- .panel-body -->
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+<script>
+$("#navIndex").addClass("active");
+</script>
+}

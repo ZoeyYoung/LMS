@@ -1,0 +1,281 @@
+@(borrowForm: Form[Borrow])
+@import bootstrap3._
+@adminMain("书刊借阅") {
+<div class="row">
+    <div class="col-md-12">
+        <div class="well">
+            <p id="commonMsg" class="bg-danger" role="alert"></p>
+            <form action="/admin/borrows/newborrow" method="POST"
+                class="form-horizontal" role="form">
+                <div class="row">
+                    <div class="col-md-5 col-sm-6">
+                        @text48(borrowForm("counterpartCode"),
+                            label = "书刊条码",
+                            placeholder = "书刊条码",
+                            help = "")
+                        @static("书刊名称", "bookNameTxt", "书刊名称")
+                        @static("ISBN/ISSN", "isbnTxt", "ISBN/ISSN")
+                        <div class="form-group">
+                            <div class="col-sm-12 col-md-offset-4 col-md-8">
+                                <div class="btn-group btn-group-justified">
+                                    <div class="btn-group">
+                                        <input type="hidden" id="libraryTypeTxt" />
+                                        <button id="borrowBtn" type="button" class="btn btn-primary" disabled="disabled">借出</button>
+                                    </div>
+                                    <div class="btn-group">
+                                        <button id="renewBtn" type="button" class="btn btn-success" disabled="disabled">续借</button>
+                                    </div>
+                                    <div class="btn-group">
+                                        <button id="returnBtn" type="button" class="btn btn-danger" disabled="disabled">归还</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 col-sm-6">
+                        @text48(borrowForm("readerCode"), label =
+                            "读者编号", placeholder = "读者编号", help = "")
+                        @static("读者姓名", "readerNameTxt", "读者姓名")
+                        @static("证卡编号", "readerCodeTxt", "证卡编号")
+                        @static("读者类别", "readerCateTxt", "读者类别")
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table id="borrowsTable" class="table table-striped table-bordered table-condensed">
+                <thead>
+                    <tr>
+                        <th width="100px">借出日期</th>
+                        <th width="100px">借出时间</th>
+                        <th width="100px">应还日期</th>
+                        <th width="80px">状态</th>
+                        <th>书刊名称</th>
+                        <th>馆藏类型</th>
+                        <th width="150px">书刊条码</th>
+                        <th>索书号</th>
+                        <th>分类</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <p id="borrowStatusMsg" class="bg-warning" role="alert"></p>
+    </div>
+</div>
+<script>
+$("#navBookBorrow").addClass("active");
+$("#navBookBorrow").parent().parent().parent().addClass("active").children('ul').collapse('toggle');
+$("#commonMsg").hide();
+$("#borrowStatusMsg").hide();
+var bookBorrowable = false;
+var readerBorrowable = false;
+var readerRenewable = true;
+var resetTable = function(data) {
+    $('#borrowsTable').dataTable({
+        destroy: true,
+        data: data,
+        columns: [
+            { "data": "borrowDate" },
+            { "data": "borrowTime" },
+            { "data": "returnDate" },
+            { "data": "borrowStatus" },
+            { "data": "bookname" },
+            { "data": "libraryType" },
+            { "data": "counterpartCode" },
+            { "data": "categoryCode" },
+            { "data": "category" }
+        ],
+        paging: false,
+        ordering: false,
+        searching: false,
+        info: false,
+        scrollX: true,
+        language: language
+    });
+    if ($("tr:contains('已逾期')").length > 0) {
+        $("tr:contains('已逾期')").addClass("danger");
+        $("#borrowStatusMsg").text("存在逾期书刊，不能借阅(或续借)");
+        $("#borrowStatusMsg").show();
+        readerBorrowable = false;
+    }
+};
+var setReaderBorrows = function(readerCode) {
+    $.getJSON("/readerBorrows/" + readerCode + "/current").done(function(data) {
+        resetTable(data.borrows);
+        if (data.borrowStatusMsg) {
+            $("#borrowStatusMsg").text(data.borrowStatusMsg);
+            $("#borrowStatusMsg").show();
+            if (data.borrowStatusMsg === "存在逾期未归还书刊，无法借阅(或续借)\n") {
+                readerRenewable = false;
+            }
+            readerBorrowable = false;
+        } else {
+            var isbnTxtVal = $("#isbnTxt").val();
+            for (var i = 0, bLen = data.borrows.length; i < bLen; i++) {
+                if (data.borrows[i].isbn === isbnTxtVal && $("#counterpartCode").val() !== data.borrows[i].counterpartCode) {
+                    $("#commonMsg").text("已借阅该书刊，不能借阅多本。");
+                    $("#commonMsg").show();
+                    readerBorrowable = false;
+                    return false;
+                }
+            }
+            if (isbnTxtVal.startWith("9784") || $("#libraryTypeTxt").val() === "原版图书") {
+                var readerCate = $("#readerCateTxt").val();
+                if (readerCate === "实习生" || readerCate === "外注" || readerCate === "江苏富士通") {
+                    $("#commonMsg").text("实习生/外注/江苏富士通员工不可借阅日文原版图书");
+                    $("#commonMsg").show();
+                    readerBorrowable = false;
+                    return false;
+                }
+            }
+            readerBorrowable = true;
+            if (bookBorrowable) {
+                $("#borrowBtn").removeAttr("disabled");
+                return true;
+            }
+        }
+    });
+};
+var setReader = function(reader) {
+    if (reader) {
+        $("#readerNameTxt").val(reader.readerName);
+        $("#readerCodeTxt").val(reader.readerCode);
+        $("#readerCateTxt").val(reader.readerCate.readerCateName);
+        setReaderBorrows(reader.readerCode);
+    } else {
+        $("#readerNameTxt").val("");
+        $("#readerCodeTxt").val("");
+        $("#readerCateTxt").val("");
+    }
+};
+$("#readerCode").change(function() {
+    readerBorrowable = false;
+    $("#commonMsg").hide();
+    $("#borrowStatusMsg").hide();
+    setReader(null);
+    resetTable([]);
+});
+$("#readerCode").blur(function(){
+    var readerCode = $("#readerCode").val();
+    $.getJSON("/readerInfo/" + readerCode).done(function(data) {
+        if (data.msg) {
+            $("#commonMsg").text(data.msg);
+            $("#commonMsg").show();
+        } else {
+            setReader(data.reader);
+        }
+    });
+});
+var resetCounterpartCode = function() {
+    bookBorrowable = false;
+    $("#commonMsg").hide();
+    $("#bookNameTxt").val("");
+    $("#isbnTxt").val("");
+    $("#borrowBtn").attr("disabled", "disabled");
+    $("#renewBtn").attr("disabled", "disabled");
+    $("#returnBtn").attr("disabled", "disabled");
+};
+$("#counterpartCode").change(function() {
+    resetCounterpartCode();
+});
+$("#counterpartCode").blur(function(){
+    var counterpartCode = $("#counterpartCode").val();
+    var readerCode = $("#readerCode").val();
+    $.getJSON("/counterpartInfo/" + counterpartCode).done(function(data) {
+        if (data.msg) {
+            $("#commonMsg").text(data.msg);
+            $("#commonMsg").show();
+        } else {
+            var cp = data.counterpart;
+            $("#bookNameTxt").val(cp.book.bookname);
+            $("#isbnTxt").val(cp.book.isbn);
+            $("#libraryTypeTxt").val(cp.book.libraryType.libraryType);
+            var borrow = data.borrow;
+            if (borrow === "review") {
+                $("#readerCode").val(data.reader.readerCode);
+                setReader(data.reader);
+                $("#borrowBtn").attr("disabled", "disabled");
+                if (readerRenewable) {
+                    $("#renewBtn").removeAttr("disabled");
+                }
+                $("#returnBtn").removeAttr("disabled");
+            } else if (borrow === "return") {
+                $("#readerCode").val(data.reader.readerCode);
+                setReader(data.reader);
+                $("#borrowBtn").attr("disabled", "disabled");
+                $("#renewBtn").attr("disabled", "disabled");
+                $("#returnBtn").removeAttr("disabled");
+            } else if (!borrow || borrow === "borrow") {
+                bookBorrowable = true;
+                $("#borrowBtn").attr("disabled", "disabled");
+                $("#renewBtn").attr("disabled", "disabled");
+                $("#returnBtn").attr("disabled", "disabled");
+                var readerCode = $("#readerCode").val();
+                if (readerCode) {
+                    if (setReaderBorrows(readerCode) && readerBorrowable) {
+                        $("#borrowBtn").removeAttr("disabled");
+                    }
+                }
+            }
+        }
+    });
+});
+$("#borrowBtn").on("click", function() {
+    $("#borrowBtn").attr("disabled", "disabled");
+    var counterpartCode = $("#counterpartCode").val();
+    var readerCode = $("#readerCode").val();
+    $.post( "/borrows/borrowBook", {
+        "counterpartCode": counterpartCode,
+        "readerCode": readerCode
+    }).done(function(data) {
+        $("#borrowStatusMsg").hide();
+        $("#counterpartCode").val("");
+        resetCounterpartCode();
+        resetTable(data);
+    });
+});
+$("#renewBtn").on("click", function() {
+    $("#renewBtn").attr("disabled", "disabled");
+    var counterpartCode = $("#counterpartCode").val();
+    var readerCode = $("#readerCode").val();
+    $.post( "/borrows/renewBook", {
+        "counterpartCode": counterpartCode,
+        "readerCode": readerCode
+    }).done(function(data) {
+        $("#borrowStatusMsg").hide();
+        $("#counterpartCode").val("");
+        resetCounterpartCode();
+        resetTable(data);
+    });
+});
+$("#returnBtn").on("click", function() {
+    $("#returnBtn").attr("disabled", "disabled");
+    var counterpartCode = $("#counterpartCode").val();
+    var readerCode = $("#readerCode").val();
+    $.post( "/borrows/returnBook", {
+        "counterpartCode": counterpartCode,
+        "readerCode": readerCode
+    }).done(function(data) {
+        $("#borrowStatusMsg").hide();
+        $("#counterpartCode").val("");
+        resetCounterpartCode();
+        resetTable(data);
+    });
+});
+String.prototype.startWith=function(str){
+    var reg=new RegExp("^"+str);
+    return reg.test(this);
+}
+
+String.prototype.endWith=function(str){
+    var reg=new RegExp(str+"$");
+    return reg.test(this);
+}
+</script>
+}

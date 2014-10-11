@@ -1,0 +1,167 @@
+@(pointForm: Form[views.form.PointForm], points: List[Point], sumpoints: List[views.table.SumPointTable])
+@import helper._
+@import bootstrap3._
+@adminMain("积分管理") {
+<div class="row">
+    <div class="col-sm-12 col-xs-12">
+        <form class="form-inline well" action="/admin/newPoint" method="POST">
+            <fieldset>
+                <p id="commonMsg" class="bg-danger" role="alert"></p>
+                @simpletext(pointForm("readerCode"), placeholder = "读者编码")
+                <div class="form-group">
+                    <select class="form-control input-sm" id="ptype" name="ptype" placeholder="积分类型">
+                        <option value="REWARDS" selected="selected">奖惩积分</option>
+                        <option value="DONATION">捐赠积分</option>
+                        <option value="EXCHANGE">兑换礼品</option>
+                    </select>
+                </div>
+                @simpletext(pointForm("source"), placeholder = "来源", size="20")
+                @simpletext(pointForm("point"), placeholder = "积分")
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary"
+                            style="width:50px; height:36px; padding: 1px 6px;">提交</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="active"><a href="#points" role="tab" data-toggle="tab">积分明细</a></li>
+          <li><a href="#sumpoints" role="tab" data-toggle="tab">读者积分</a></li>
+          <li><a href="#help" role="tab" data-toggle="tab">积分规则</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane fade" id="sumpoints">
+                <br/>
+                @table("sumpointTable"){
+                    <tr>
+                        <th>读者编码</th>
+                        <th>读者姓名</th>
+                        <th>总积分</th>
+                        <th>可兑换积分</th>
+                    </tr>
+                }{
+                    @for(point <- sumpoints) {
+                    <tr>
+                        <td>@point.reader.readerCode</td>
+                        <td>@point.reader.readerName</td>
+                        <td>@point.totalpoint</td>
+                        <td>@point.point</td>
+                    </tr>
+                    }
+                }
+            </div>
+            <div class="tab-pane fade in active" id="points">
+                <br/>
+                @table("pointTable"){
+                    <tr>
+                        <th>读者编码</th>
+                        <th>读者姓名</th>
+                        <th>类型</th>
+                        <th>来源</th>
+                        <th>积分</th>
+                        <th>获得时间</th>
+                        <th>操作</th>
+                    </tr>
+                }{
+                    @for(point <- points) {
+                    <tr>
+                        <td>@point.reader.readerCode</td>
+                        <td>@point.reader.readerName</td>
+                        <td>@point.ptype.ptype()</td>
+                        <td>@point.source</td>
+                        <td>@point.point</td>
+                        <td>@point.createDate</td>
+                        <td>@if(point.ptype.ptype() != "借阅积分" && point.ptype.ptype() != "兑换礼品") {
+                           @form(routes.PointCtrl.deletePoint(point.id)){
+                            <div class="btn-group">
+                                <button type="submit" class="btn btn-danger btn-xs" style="padding: 1px 5px;">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                            }
+                        }</td>
+                    </tr>
+                    }
+                }
+                <p class="help-block">借阅积分为系统自动添加, 不可删除.</p>
+            </div>
+            <div class="tab-pane fade" id="help">
+                <br>
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th>类型</th>
+                      <th>来源</th>
+                      <th>积分</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="3">借阅积分</td>
+                      <td>借阅</td>
+                      <td>+1</td>
+                    </tr>
+                    <tr>
+                      <td>按时归还</td>
+                      <td>+1</td>
+                    </tr>
+                    <tr>
+                      <td>逾期归还</td>
+                      <td>-1/日</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="2">奖惩积分</td>
+                      <td>服务积分</td>
+                      <td>1/次</td>
+                    </tr>
+                    <tr>
+                      <td>图书污损</td>
+                      <td>-1</td>
+                    </tr>
+                    <tr>
+                      <td>捐赠积分（用于积分兑换）</td>
+                      <td>捐赠</td>
+                      <td>2/本</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+$("#navPoints").addClass("active");
+$("#commonMsg").hide();
+$("span.help-block").hide();
+$("#pointTable").dataTable({
+    "searching": false,
+    "info": false,
+    "order": [[ 5, "desc" ]],
+    "language": language
+});
+$("#sumpointTable").dataTable({
+    "info": false,
+    "language": language
+});
+$("input, #readerCode").on('change', function() {
+    $("#commonMsg").hide();
+});
+$("#readerCode").blur(function(){
+    var readerCode = $("#readerCode").val();
+    if(readerCode.replace(/^\s+|\s+$/g,'').length == 0 ) {
+        return;
+    }
+    $.getJSON("/readerInfo/" + readerCode).done(function(data) {
+        if (data.msg) {
+            $("#commonMsg").text(data.msg);
+            $("#commonMsg").show();
+        }
+    });
+});
+</script>
+}

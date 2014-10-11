@@ -1,0 +1,63 @@
+@(borrowList : List[views.table.BorrowTable])
+@import helper._
+@import bootstrap3._
+@readerMain("我在读的书") {
+<div class="row">
+    <div class="col-md-12">
+        @table("borrowsTable"){
+            <tr>
+                <th>书名</th>
+                <th>类型</th>
+                <th width="100px">借出日期</th>
+                <th width="100px">借出时间</th>
+                <th width="100px">应还日期</th>
+                <th width="80px">状态</th>
+                <th width="80px">操作</th>
+                <th width="80px">续借</th>
+            </tr>
+        }{
+        @for(borrow <- borrowList){
+            <tr>
+                <td><a href="/reader/books/@borrow.isbn/info">@borrow.bookname</a></td>
+                <td>@borrow.category</td>
+                <td>@borrow.borrowDate</td>
+                <td>@borrow.borrowTime</td>
+                <td>@borrow.returnDate</td>
+                <td>
+                    @borrow.borrowStatus
+                    @if(borrow.renewTimes>0){ ( @borrow.renewTimes 次) }
+                </td>
+                <td><a href="/reader/bookReview/@borrow.isbn/get">评论</a></td>
+                <td>@if(borrow.renewable){
+                        <button type="button" class="btn btn-primary btn-xs"
+                            onclick="renewBook('@borrow.counterpartCode', '@borrow.readerCode')">续借</button>
+                    }else{<button type="button" class="btn btn-default disabled btn-xs">续借</button>}
+                </td>
+            </tr>
+           }
+        }
+        <p id="borrowStatusMsg" class="bg-warning" role="alert"></p>
+    </div>
+</div>
+<script>
+$("#navBorrows").addClass("active");
+$('#borrowsTable').DataTable({
+    "scrollX": true,
+    "language": language
+});
+var renewBook = function(counterpartCode, readerCode) {
+    $.post( "/borrows/renewBook", {
+        "counterpartCode": counterpartCode,
+        "readerCode": readerCode
+    }).done(function(data) {
+        window.location = "/reader/borrows";
+    });
+};
+$("#borrowStatusMsg").hide();
+if ($("tr:contains('已逾期')").length > 0) {
+    $("tr:contains('已逾期')").css("color", "red");
+    $("#borrowStatusMsg").text("存在逾期书刊，请尽快归还，否则不能借阅(或续借)");
+    $("#borrowStatusMsg").show();
+}
+</script>
+}

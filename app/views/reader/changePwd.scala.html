@@ -1,0 +1,95 @@
+@(reader:Reader,message: String = "")
+@import bootstrap3._
+@readerMain("修改密码") {
+<div class="row">
+    <div class="col-md-6">
+        @if(message != "") {
+        <div id="commonMsg" class="bg-info">@message</div>
+        }
+        <form name="changePwdForm" action="/reader/changePwd" method="POST" class="form-horizontal well">
+            <div id="originPwdInput" class="form-group">
+                <label class="col-sm-3 control-label">原密码</label>
+                <div class="col-sm-8">
+                  <input type="password" class="form-control input-sm" maxlength="20"
+                          id="originPassword" name="originPassword" placeholder="原密码" />
+                  <span id="oerrMsg" class="help-block"></span>
+                </div>
+            </div>
+            <div id="pwdInput" class="form-group">
+                <label class="col-sm-3 control-label">新密码</label>
+                <div class="col-sm-8">
+                  <input type="password" class="form-control input-sm" maxlength="20"
+                          id="password" name="password" placeholder="新密码" />
+                </div>
+            </div>
+            <div id="rpwdInput" class="form-group">
+            <label class="col-sm-3 control-label">确认新密码</label>
+                <div class="col-sm-8">
+                    <input type="password" class="form-control input-sm" maxlength="20"
+                            id="repassword" name="repassword" placeholder="再次输入新密码" />
+                    <span id="errMsg" class="help-block" style="color:red;"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-8">
+                  <button id="submitBtn" type="button" class="btn btn-primary">提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+$("#navChangePwd").addClass("active");
+$("#navChangePwd").parent().parent().parent().addClass("active").children('ul').collapse('toggle');
+$("#password, #repassword").on('change', function() {
+    $("#pwdInput").removeClass("has-error");
+    $("#rpwdInput").removeClass("has-error");
+});
+$("#originPassword").on('change', function() {
+    $("#originPwdInput").removeClass("has-error");
+});
+$("#submitBtn").on('click', function() {
+    var pwd = $("#originPassword").val();
+
+    var reg = /^[a-zA-Z0-9]{1}([a-zA-Z0-9]|[._]){4,19}$/;
+    if ( pwd.replace(/^\s+|\s+$/g,'').length === 0 ) {
+        $("#oerrMsg").show();
+        $("#originPwdInput").addClass("has-error");
+        $("#oerrMsg").html("请输入原密码");
+        return;
+    }
+    $("#oerrMsg").hide();
+    $("#originPwdInput").removeClass("has-error");
+    
+    if ( $("#password").val().replace(/^\s+|\s+$/g,'').length === 0 ) {
+        $("#pwdInput").addClass("has-error");
+        return;
+    }
+    
+    if( !reg.test($("#password").val()) ) {
+        $("#errMsg").show();
+        $("#pwdInput").addClass("has-error");
+        $("#errMsg").html("输入密码字符只能含数字字母下划线和点，密码长度4-19");
+        return;
+    }
+    if ($("#password").val() !== $("#repassword").val()) {
+        $("#errMsg").show();
+        $("#pwdInput").addClass("has-error");
+        $("#rpwdInput").addClass("has-error");
+        $("#errMsg").html("新密码输入不一致，请重新输入");
+        return;
+    }
+    
+    if (pwd === $("#password").val()) {
+        $("#errMsg").show();
+        $("#errMsg").html("输入的新密码与原密码相同，无需修改");
+        return;
+    }
+    
+    $("#errMsg").hide();
+    $("#pwdInput,#rpwdInput").removeClass("has-error");
+    changePwdForm.submit();
+});
+</script>
+}

@@ -1,0 +1,28 @@
+@(loginForm: Form[views.form.LoginForm], message: String)
+@main("读者登录") {
+<link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/login.css")">
+<div id="container">
+    <form action="/reader/login" method="POST">
+        <div class="login">读者登录</div>
+        <div class="username-text">读者编号:</div>
+        <div class="password-text">密码:</div>
+        <div class="username-field">
+            <input type="text" id="readerCode" name="readerCode" value="" />
+            @if(loginForm("readerCode").hasErrors) {
+            <p id="errorMsg" class="text-danger">@{loginForm("readerCode").error.map { error => error.message }}</p>
+            }
+        </div>
+        <div class="password-field">
+            <input type="password" name="password" value="" />
+            @if(loginForm("password").hasErrors) {
+            <p id="errorMsg" class="text-danger">@{loginForm("password").error.map { error => error.message }}</p>
+            }
+        </div>
+        <p class="text-danger" style="padding: 20px 0 20px 40px; float: left;">@if(message) { @message }</p>
+        <input type="submit" name="submit" value="登录" />
+    </form>
+</div>
+<script>
+
+</script>
+}
